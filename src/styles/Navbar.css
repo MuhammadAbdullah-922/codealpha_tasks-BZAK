@@ -1,0 +1,326 @@
+.bzak-header {
+  font-family: "Poppins", "Segoe UI", sans-serif;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+/* ---------- Top bar ---------- */
+.bzak-topbar {
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  font-size: 0.85rem;
+}
+.bzak-topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+}
+
+.bzak-toplinks {
+  display: flex;
+  gap: 1.75rem;
+}
+
+.bzak-toplink {
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+}
+.bzak-toplink:hover {
+  color: #ec4b3c;
+}
+
+.bzak-phone {
+  color: #333;
+  text-decoration: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+/* ---------- Main bar ---------- */
+.bzak-mainbar {
+  background: #fff;
+  padding: 14px 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.bzak-mainbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.bzak-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.bzak-logo-img {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* ---------- Search ---------- */
+.bzak-search {
+  flex: 1;
+  max-width: 560px;
+  border: 1px solid #e2e2e2;
+  border-radius: 6px;
+  overflow: visible;
+  display: flex;
+  position: relative;
+}
+
+.bzak-search-cat {
+  border-right: 1px solid #e2e2e2;
+  position: relative;
+}
+
+.bzak-search-cat-btn {
+  height: 100%;
+  padding: 0 14px;
+  background: #fafafa;
+  border: none;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  color: #444;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* FIXED: dropdown is absolute, hidden by default, floats over content */
+.bzak-cat-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  min-width: 180px;
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 50;
+}
+
+.bzak-cat-dropdown.open {
+  display: flex;
+}
+
+.bzak-cat-dropdown li {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.bzak-cat-dropdown li:hover {
+  background: #f7f2ec;
+  color: #ec4b3c;
+}
+
+.bzak-search-input {
+  flex: 1;
+  border: none;
+  padding: 0 14px;
+  font-size: 0.9rem;
+  outline: none;
+  min-width: 0;
+  padding: 16px 25px;
+}
+
+.bzak-search-btn {
+  background: #ec4b3c;
+  border: none;
+  color: #fff;
+  padding: 0 18px;
+  cursor: pointer;
+}
+
+/* ---------- Icons ---------- */
+.bzak-icons {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.bzak-icon-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #333;
+  text-decoration: none;
+  gap: 2px;
+}
+
+.bzak-icon-link svg {
+  font-size: 1.1rem;
+}
+
+.bzak-icon-link:hover {
+  color: #ec4b3c;
+}
+
+.bzak-cart {
+  position: relative;
+}
+
+.bzak-cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  background: #ec4b3c;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.65rem;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bzak-mobile-menu {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  max-height: 0;
+  overflow: hidden;
+  transition: 0.3s ease;
+  border-top: 1px solid #eee;
+}
+
+.bzak-mobile-menu.open {
+  max-height: 400px;
+}
+
+.bzak-mobile-link {
+  padding: 14px 20px;
+  text-decoration: none;
+  color: #333;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.bzak-mobile-link:hover {
+  background: #f5f5f5;
+  color: #ec4b3c;
+}
+
+/* HIDE SEARCH ON MOBILE */
+@media (max-width: 768px) {
+  .bzak-search {
+    display: none !important;
+  }
+}
+/* ---------- Mobile ---------- */
+@media (max-width: 991.98px) {
+  .bzak-toplinks {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+    background: #fff;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  .bzak-toplinks.open {
+    max-height: 320px;
+  }
+
+  .bzak-toplink {
+    padding: 12px 20px;
+    border-bottom: 1px solid #f2f2f2;
+  }
+
+  .bzak-phone {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .bzak-logo-img {
+    height: 38px;
+  }
+
+  .bzak-icons {
+    gap: 1rem;
+  }
+}
+.bzak-hamburger {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+
+  font-size: 1.2rem;
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.bzak-hamburger:hover {
+  background: #f7f7f7;
+  transform: scale(1.05);
+}
+/*
+  ADD THIS to the END of your existing src/styles/Navbar.css
+
+  WHY: .bzak-header is `position: fixed`, so it's taken out of the normal
+  page flow — nothing below it "knows" to leave space for it. That's why
+  the top of every page (image, title, sidebar heading) has been getting
+  hidden behind the navbar, on every single page, not just Product_details.
+
+  This adds that missing space back, globally, in one place — instead of
+  padding every page's own CSS file individually.
+
+  130px = topbar (44px content + 1px border) + mainbar (14px+14px padding
+  + ~52px content). If you ever change the navbar's height (bigger logo,
+  taller search bar, etc.), bump this number to match.
+*/
+
+body {
+  padding-top: 130px;
+}
+/* Add this to Navbar.css — copies the existing .bzak-cart-badge look
+   for the wishlist icon. If your cart badge rule already looks like
+   this, just duplicate it renamed for wishlist: */
+.bzak-wishlist {
+  position: relative;
+}
+.bzak-wishlist-badge {
+  position: absolute;
+  top: -8px;
+  right: -3px;
+  background: #ec4b3c;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}

@@ -1,0 +1,175 @@
+/* ================= About Page ================= */
+/* Uses the same font/color system as Navbar.css & Footer.css */
+
+.bzak-breadcrumb {
+  background: linear-gradient(90deg, #ec4b3c, #f0644f);
+  padding: 40px 0;
+  /* offset for the fixed header — adjust if your header height changes */
+ 
+}
+
+.bzak-breadcrumb-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.bzak-breadcrumb-inner h1 {
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+}
+
+.bzak-breadcrumb-path {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+}
+
+.bzak-breadcrumb-path a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.bzak-breadcrumb-path a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- About content ---------- */
+.bzak-about {
+  padding: 70px 0;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+}
+
+.bzak-about-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 20px;
+}
+
+.bzak-about p {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.bzak-about-stats {
+  display: flex;
+  gap: 24px;
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 28px;
+  margin-top: 24px;
+}
+
+.bzak-stat {
+  text-align: center;
+  flex: 1;
+}
+
+.bzak-stat h3 {
+  color: #ec4b3c;
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.bzak-stat h3 span {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.bzak-stat p {
+  margin: 4px 0 0;
+  color: #333;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.bzak-about-img img {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+  max-height: 500px;
+}
+
+/* ---------- Feature cards ---------- */
+.bzak-about-features {
+  padding: 20px 0 80px;
+}
+
+.bzak-feature-card {
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 32px 24px;
+  text-align: center;
+  height: 100%;
+  transition: 0.25s ease;
+}
+
+.bzak-feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+.bzak-feature-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #fdece9;
+  color: #ec4b3c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin: 0 auto 16px;
+}
+
+.bzak-feature-card h5 {
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 8px;
+}
+
+.bzak-feature-card p {
+  color: #777;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* ---------- Responsive ---------- */
+/* @media (max-width: 991.98px) {
+  .bzak-breadcrumb {
+    margin-top: 100px;
+  }
+} */
+
+@media (max-width: 767.98px) {
+  .bzak-breadcrumb {
+    padding: 28px 0;
+  }
+  .bzak-about {
+    padding: 40px 0;
+  }
+  .bzak-about-stats {
+    flex-wrap: wrap;
+  }
+  .bzak-stat {
+    flex: 1 1 45%;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .bzak-about-title {
+    font-size: 1.5rem;
+  }
+  .bzak-about-features {
+    padding-bottom: 50px;
+  }
+}

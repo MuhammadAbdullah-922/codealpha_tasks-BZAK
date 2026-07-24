@@ -1,0 +1,214 @@
+/* ================= Contact Page ================= */
+/* Reuses .bzak-breadcrumb styles from About.css — make sure About.css
+   is imported somewhere globally, OR copy the .bzak-breadcrumb block
+   from About.css into this file too. */
+
+.bzak-contact-info {
+  padding: 60px 0 20px;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+}
+
+.bzak-contact-card {
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 32px 24px;
+  text-align: center;
+  height: 100%;
+  transition: 0.25s ease;
+}
+
+.bzak-contact-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+.bzak-contact-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #fdece9;
+  color: #ec4b3c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin: 0 auto 16px;
+}
+
+.bzak-contact-card h5 {
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 8px;
+}
+
+.bzak-contact-card p {
+  color: #777;
+  font-size: 0.88rem;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.bzak-contact-card a {
+  color: #777;
+  text-decoration: none;
+}
+
+.bzak-contact-card a:hover {
+  color: #ec4b3c;
+}
+
+/* ---------- Form + Map ---------- */
+.bzak-contact-main {
+  padding: 50px 0 90px;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+}
+
+.bzak-contact-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 12px;
+}
+
+.bzak-contact-sub {
+  color: #777;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.bzak-contact-form label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.bzak-contact-form input,
+.bzak-contact-form textarea {
+  width: 100%;
+  border: 1px solid #e2e2e2;
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease;
+  resize: vertical;
+}
+
+.bzak-contact-form input:focus,
+.bzak-contact-form textarea:focus {
+  border-color: #ec4b3c;
+}
+
+.bzak-input-error {
+  border-color: #e63946 !important;
+}
+
+.bzak-field-error {
+  display: block;
+  color: #e63946;
+  font-size: 0.78rem;
+  margin-top: 4px;
+}
+
+.bzak-contact-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #ec4b3c;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 13px 28px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.bzak-contact-submit:hover:not(:disabled) {
+  background: #d63e2f;
+}
+
+.bzak-contact-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.bzak-alert {
+  padding: 14px 16px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  margin-bottom: 20px;
+}
+
+.bzak-alert-success {
+  background: #e8f7ee;
+  color: #1e7e42;
+  border: 1px solid #b7e6c6;
+}
+
+.bzak-alert-error {
+  background: #fdeceb;
+  color: #c0392b;
+  border: 1px solid #f3c2bd;
+}
+
+/* ---------- Map + Hours ---------- */
+.bzak-contact-map {
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  line-height: 0;
+}
+
+.bzak-contact-hours {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 20px 24px;
+}
+
+.bzak-contact-hours-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #fdece9;
+  color: #ec4b3c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.bzak-contact-hours h5 {
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+.bzak-contact-hours p {
+  color: #777;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 767.98px) {
+  .bzak-contact-info {
+    padding: 40px 0 10px;
+  }
+  .bzak-contact-main {
+    padding: 30px 0 60px;
+  }
+  .bzak-contact-title {
+    font-size: 1.5rem;
+  }
+}

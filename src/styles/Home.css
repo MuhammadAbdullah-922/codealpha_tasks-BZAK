@@ -1,0 +1,644 @@
+/* ---------- Global safety: prevent horizontal scroll ---------- */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+* {
+  box-sizing: border-box;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+.container,
+.row {
+  max-width: 100%;
+}
+
+.bzak-section {
+  padding: 60px 0;
+}
+
+.bzak-img-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 60px;
+  background-image: url('../assets/pic5.jpeg');
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+}
+.bzak-img-placeholder-round {
+  border-radius: 50%;
+}
+.bzak-loading-note {
+  text-align: center;
+  color: #999;
+  font-size: 0.85rem;
+  padding: 10px 0 30px;
+}
+.bzak-section-alt {
+  background: #faf7f2;
+}
+.bzak-eyebrow {
+  color: #ec4b3c;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.bzak-section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #222;
+  margin-bottom: 0.5rem;
+}
+
+/* Categories */
+.bzak-cat-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 24px 14px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease,
+    color 0.2s ease;
+  height: 100%;
+}
+.bzak-cat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  background: #000;
+  color: #fff;
+}
+.bzak-cat-card:hover h6,
+.bzak-cat-card:hover span {
+  color: #fff;
+}
+.bzak-cat-img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 12px;
+  background: #f3f3f3;
+}
+.bzak-cat-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.bzak-cat-card h6 {
+  font-weight: 700;
+  margin-bottom: 2px;
+  color: #222;
+}
+.bzak-cat-card span {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+/* Tabs */
+.bzak-tabs span {
+  margin-left: 20px;
+  color: #999;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.bzak-tabs span:first-child {
+  margin-left: 0;
+}
+.bzak-tabs span.active {
+  color: #2ea043;
+}
+
+/* Promo card */
+.bzak-promo-card {
+  background: #2e2a22 url("../assets/pic3.jpeg") center/cover;
+  border-radius: 10px;
+  height: 100%;
+  min-height: 320px;
+  color: #fff;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.bzak-promo-card h4 {
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.bzak-outline-btn {
+  background: #ec4b3c;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  width: fit-content;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+/* Product cards */
+.bzak-product-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 14px;
+  height: 100%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.bzak-product-card:hover {
+  background: #000;
+  color: #fff;
+}
+.bzak-product-card:hover .bzak-product-name,
+.bzak-product-card:hover .bzak-sold-text {
+  color: #fff;
+}
+.bzak-product-card:hover .bzak-price .new {
+  color: #fff;
+}
+.bzak-product-card:hover .bzak-price .old {
+  color: #ccc;
+}
+
+/* This is a grid container so the tag badge can overlay the image
+   without any position:absolute. */
+.bzak-product-media {
+  display: grid;
+  margin-bottom: 10px;
+}
+.bzak-product-tag {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  justify-self: start;
+  align-self: start;
+  margin: 8px;
+  background: #2ea043;
+  color: #fff;
+  font-size: 0.65rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  z-index: 2;
+}
+
+.bzak-product-img {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  height: 230px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+.bzak-product-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 10px;
+  display: block;
+}
+
+.bzak-product-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-height: 42px;
+  color: #333;
+}
+.bzak-stars {
+  color: #f2b400;
+  font-size: 0.7rem;
+  margin-bottom: 6px;
+}
+.bzak-price {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+.bzak-price .new {
+  color: #2ea043;
+  font-weight: 700;
+}
+.bzak-price .old {
+  color: #aaa;
+  text-decoration: line-through;
+  font-size: 0.8rem;
+}
+.bzak-sold-bar {
+  height: 5px;
+  background: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.bzak-sold-fill {
+  height: 100%;
+  background: #ec4b3c;
+}
+.bzak-sold-text {
+  font-size: 0.7rem;
+  color: #999;
+  display: block;
+  margin-bottom: 10px;
+}
+.bzak-add-btn {
+  width: 100%;
+  background: #ec4b3c;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.bzak-add-btn:hover {
+  background: #d33c2e;
+}
+
+/* Featured Styles (dish cards) */
+.bzak-slider-nav button {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: #eee;
+  font-size: 1.2rem;
+  margin-left: 8px;
+  cursor: pointer;
+}
+.bzak-slider-nav button.active {
+  background: #ec4b3c;
+  color: #fff;
+}
+.bzak-dish-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  height: 100%;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.bzak-dish-card:hover {
+  background: #000;
+  color: #fff;
+}
+.bzak-dish-card:hover h5,
+.bzak-dish-card:hover p {
+  color: #fff;
+}
+
+/* GRID overlay technique (no position:absolute):
+   - .bzak-dish-img-wrap is the grid container, NOT clipped.
+   - .bzak-dish-img-inner is the circular clipped image (grid cell 1/1).
+   - .bzak-dish-fav sits in the SAME grid cell, aligned to top-right,
+     so it overlaps the circle but is never cut off by its border-radius. */
+.bzak-dish-img-wrap {
+  display: grid;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 16px;
+}
+.bzak-dish-img-inner {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #f0f0f0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+.bzak-dish-img-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+.bzak-dish-fav {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  justify-self: end;
+  align-self: start;
+  background: #ec4b3c;
+  color: #fff;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+.bzak-dish-fav:hover {
+  background: #d33c2e;
+}
+
+.bzak-dish-card h5 {
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #222;
+}
+.bzak-dish-card p {
+  color: #777;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* Deals */
+.bzak-link {
+  color: #ec4b3c;
+  font-weight: 600;
+  text-decoration: none;
+}
+.bzak-deal-card {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 100%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.bzak-deal-card:hover {
+  background: #000;
+  color: #fff;
+}
+.bzak-deal-card:hover .bzak-deal-name,
+.bzak-deal-card:hover .bzak-deal-by {
+  color: #fff;
+}
+.bzak-deal-card:hover .bzak-price .new {
+  color: #fff;
+}
+.bzak-deal-card:hover .bzak-price .old {
+  color: #ccc;
+}
+.bzak-deal-card img,
+.bzak-deal-card .bzak-img-placeholder {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  object-position: top;
+  background: #f0f0f0;
+  border-radius: 0;
+}
+.bzak-deal-info {
+  padding: 14px;
+}
+.bzak-deal-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  min-height: 40px;
+  margin-bottom: 2px;
+  color: #222;
+}
+.bzak-deal-by {
+  color: #999;
+  font-size: 0.75rem;
+}
+.bzak-deal-add {
+  background: #ec4b3c;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+/* Why choose us */
+.bzak-why-img {
+  width: 100%;
+  min-height: 340px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+.bzak-why-item {
+  margin-bottom: 22px;
+  padding-left: 4px;
+  border-left: 3px solid #ec4b3c;
+  padding-left: 16px;
+}
+.bzak-why-item h5 {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.bzak-why-item p {
+  color: #777;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Newsletter */
+.bzak-newsletter {
+  background: #2a2118;
+  color: #fff;
+  padding: 60px 0;
+}
+.bzak-newsletter h3 {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.bzak-newsletter p {
+  color: #ccc;
+  margin-bottom: 20px;
+}
+.bzak-newsletter-form {
+  display: flex;
+  max-width: 420px;
+}
+.bzak-newsletter-form input {
+  flex: 1;
+  border: none;
+  border-radius: 6px 0 0 6px;
+  padding: 0 16px;
+  height: 46px;
+  outline: none;
+}
+.bzak-newsletter-form button {
+  background: #ec4b3c;
+  color: #fff;
+  border: none;
+  border-radius: 0 6px 6px 0;
+  padding: 0 22px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Feature strip */
+.bzak-features {
+  padding: 36px 0;
+  border-top: 1px solid #eee;
+}
+.bzak-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+}
+.bzak-feature-icon {
+  font-size: 1.6rem;
+  color: #ec4b3c;
+}
+.bzak-feature-item h6 {
+  font-weight: 700;
+  margin-bottom: 2px;
+  font-size: 0.9rem;
+}
+.bzak-feature-item p {
+  color: #999;
+  font-size: 0.78rem;
+  margin: 0;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 991.98px) {
+  .bzak-section {
+    padding: 40px 0;
+  }
+  .bzak-section-title {
+    font-size: 1.6rem;
+  }
+  .bzak-feature-item {
+    justify-content: flex-start;
+  }
+}
+@media (max-width: 575.98px) {
+  .bzak-newsletter-form {
+    flex-direction: column;
+    max-width: 100%;
+  }
+  .bzak-newsletter-form input,
+  .bzak-newsletter-form button {
+    border-radius: 6px;
+    width: 100%;
+    height: 46px;
+  }
+  .bzak-newsletter-form input {
+    margin-bottom: 10px;
+  }
+}
+/*
+  In your existing src/styles/Home.css, FIND this existing block:
+
+    .bzak-why-img {
+      width: 100%;
+      min-height: 340px;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+
+  and REPLACE it with this:
+*/
+
+/*
+  In your existing src/styles/Home.css, FIND this existing block:
+
+    .bzak-why-img {
+      width: 100%;
+      min-height: 340px;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+
+  and REPLACE it with this:
+*/
+/*
+  In your existing src/styles/Home.css, FIND this existing block:
+
+    .bzak-why-img {
+      width: 100%;
+      min-height: 340px;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+
+  and REPLACE it with this:
+*/
+
+.bzak-why-img-link {
+  display: block;
+  text-decoration: none;
+}
+
+.bzak-why-img {
+  width: 100%;
+  height: 460px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.bzak-why-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+@media (max-width: 991.98px) {
+  .bzak-why-img {
+    height: 360px;
+  }
+}
+/* ADD THIS 👇 */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+/* Active (wishlisted) heart state */
+.bzak-dish-fav.active {
+  background: #b5261a;
+}
+.bzak-dish-fav:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Simple top-right toast */
+.bzak-toast {
+  position: fixed;
+  top: 90px;
+  right: 20px;
+  z-index: 9999;
+  background: #222;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  animation: bzak-toast-in 0.25s ease;
+}
+.bzak-toast--error {
+  background: #c0392b;
+}
+@keyframes bzak-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 575.98px) {
+  .bzak-toast {
+    left: 16px;
+    right: 16px;
+    top: 70px;
+    text-align: center;
+  }
+}

@@ -1,0 +1,643 @@
+/* =========================================================
+   MyAccount.css — Bzack Apparel Account Dashboard
+   Design concept: garment shipping-label / hang-tag styling
+   for order tickets, tying the UI to the apparel/shipping
+   subject matter instead of a generic dashboard look.
+   ========================================================= */
+
+:root {
+  --ma-canvas: #f3efe7;
+  --ma-card: #fbf9f4;
+  --ma-card-alt: #f0ece2;
+  --ma-ink: #221f1d;
+  --ma-ink-muted: #776f63;
+  --ma-rust: #a6432b;
+  --ma-rust-bg: #fbeae6;
+  --ma-sage: #5f7a5a;
+  --ma-mustard: #c89b3c;
+  --ma-blue: #3e6b8a;
+  --ma-rule: #ddd6c8;
+  --ma-font-display: "Archivo Black", sans-serif;
+  --ma-font-body: "Inter", sans-serif;
+  --ma-font-mono: "IBM Plex Mono", monospace;
+  --ma-radius: 8px;
+}
+
+.ma-page {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--ma-canvas);
+  font-family: var(--ma-font-body);
+  color: var(--ma-ink);
+}
+
+.ma-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px 24px 64px;
+}
+
+@media (max-width: 640px) {
+  .ma-container {
+    padding: 24px 16px 48px;
+  }
+}
+
+/* ---------- Header ---------- */
+.ma-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.ma-title {
+  font-family: var(--ma-font-display);
+  font-size: 28px;
+  color: var(--ma-ink);
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .ma-title {
+    font-size: 22px;
+  }
+}
+
+.ma-brand-tag {
+  font-family: var(--ma-font-mono);
+  font-size: 12px;
+  color: var(--ma-ink-muted);
+  letter-spacing: 0.04em;
+}
+
+/* ---------- Layout grid ---------- */
+.ma-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .ma-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Sidebar ---------- */
+.ma-sidebar-card {
+  border: 1px solid var(--ma-rule);
+  background-color: var(--ma-card);
+  border-radius: var(--ma-radius);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.ma-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--ma-rust);
+  color: #fbf9f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.ma-user-name {
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0;
+}
+
+.ma-user-email {
+  font-size: 12px;
+  color: var(--ma-ink-muted);
+  margin: 2px 0 0;
+  word-break: break-all;
+}
+
+.ma-member-since {
+  font-family: var(--ma-font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ma-ink-muted);
+  margin-top: 8px;
+}
+
+.ma-nav {
+  border: 1px solid var(--ma-rule);
+  background-color: var(--ma-card);
+  border-radius: var(--ma-radius);
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .ma-nav {
+    display: flex;
+    overflow-x: auto;
+  }
+}
+
+.ma-nav-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  text-align: left;
+  background: none;
+  border: none;
+  border-left: 3px solid transparent;
+  color: var(--ma-ink);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  font-family: var(--ma-font-body);
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .ma-nav-item {
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    justify-content: center;
+    flex: 1;
+  }
+}
+
+.ma-nav-item:hover {
+  background-color: var(--ma-card-alt);
+}
+
+.ma-nav-item.active {
+  color: var(--ma-rust);
+  background-color: var(--ma-card-alt);
+  border-left-color: var(--ma-rust);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .ma-nav-item.active {
+    border-left-color: transparent;
+    border-bottom-color: var(--ma-rust);
+  }
+}
+
+.ma-nav-item.logout {
+  color: var(--ma-ink-muted);
+  border-top: 1px solid var(--ma-rule);
+}
+
+@media (max-width: 768px) {
+  .ma-nav-item.logout {
+    border-top: none;
+    border-left: 1px solid var(--ma-rule);
+  }
+}
+
+/* ---------- Section heading ---------- */
+.ma-section-title {
+  font-family: var(--ma-font-display);
+  font-size: 20px;
+  margin: 0 0 20px;
+  color: var(--ma-ink);
+}
+
+/* ---------- Status / feedback blocks ---------- */
+.ma-muted-text {
+  font-size: 14px;
+  color: var(--ma-ink-muted);
+}
+
+.ma-error-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  padding: 12px 14px;
+  border-radius: var(--ma-radius);
+  background-color: var(--ma-rust-bg);
+  color: var(--ma-rust);
+}
+
+.ma-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 56px 24px;
+  border-radius: var(--ma-radius);
+  border: 2px dashed var(--ma-rule);
+}
+
+.ma-empty-state p:first-of-type {
+  font-weight: 600;
+  margin: 12px 0 0;
+}
+
+.ma-empty-state p:last-child {
+  font-size: 13px;
+  max-width: 280px;
+  color: var(--ma-ink-muted);
+  margin: 4px 0 0;
+}
+
+/* ---------- Orders list ---------- */
+.ma-orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ma-load-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.ma-btn-outline {
+  padding: 10px 20px;
+  border-radius: var(--ma-radius);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--ma-rule);
+  background: transparent;
+  color: var(--ma-ink);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  font-family: var(--ma-font-body);
+}
+
+.ma-btn-outline:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ma-btn-outline:hover:not(:disabled) {
+  background-color: var(--ma-card-alt);
+}
+
+/* ---------- Order ticket (signature element) ---------- */
+.ma-ticket {
+  position: relative;
+  display: flex;
+  border-radius: var(--ma-radius);
+  overflow: hidden;
+  border: 1px solid var(--ma-rule);
+  background-color: var(--ma-card);
+  box-shadow: 0 1px 2px rgba(34, 31, 29, 0.04);
+}
+
+.ma-ticket-stub {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px;
+  border-right: 2px dashed var(--ma-rule);
+  background-color: var(--ma-card-alt);
+  width: 84px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 560px) {
+  .ma-ticket-stub {
+    display: flex;
+  }
+}
+
+.ma-ticket-stub-label {
+  margin-top: 8px;
+  font-size: 10px;
+  text-align: center;
+  line-height: 1.2;
+  color: var(--ma-ink-muted);
+  font-family: var(--ma-font-mono);
+}
+
+.ma-ticket-perforation {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+@media (min-width: 560px) {
+  .ma-ticket-perforation {
+    display: flex;
+  }
+}
+
+.ma-ticket-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-left: -3px;
+  background-color: var(--ma-canvas);
+  border: 1px solid var(--ma-rule);
+}
+
+.ma-ticket-body {
+  flex: 1;
+  padding: 20px;
+  min-width: 0;
+}
+
+.ma-ticket-top-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.ma-order-number {
+  font-family: var(--ma-font-mono);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ma-ink);
+  margin: 0;
+  word-break: break-all;
+}
+
+.ma-order-date {
+  font-size: 12px;
+  color: var(--ma-ink-muted);
+  margin: 2px 0 0;
+}
+
+.ma-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+  font-family: var(--ma-font-display);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  transform: rotate(-3deg);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.ma-ticket-mid-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.ma-ticket-items-summary {
+  font-size: 14px;
+  margin: 0;
+  color: var(--ma-ink);
+}
+
+.ma-ticket-total {
+  font-family: var(--ma-font-mono);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ma-ink);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.ma-track-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ma-rust);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: var(--ma-font-body);
+}
+
+.ma-chevron {
+  transition: transform 0.2s ease;
+}
+
+.ma-chevron.open {
+  transform: rotate(180deg);
+}
+
+.ma-ticket-expanded {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--ma-rule);
+}
+
+.ma-ticket-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  .ma-ticket-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ma-detail-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ma-ink-muted);
+  margin: 0 0 6px;
+}
+
+.ma-detail-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ma-detail-list li {
+  color: var(--ma-ink);
+}
+
+.ma-detail-sub {
+  color: var(--ma-ink-muted);
+}
+
+/* ---------- Tracking stepper ---------- */
+.ma-stepper {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.ma-stepper-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.ma-stepper-node {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--ma-rule);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.ma-stepper-node.done {
+  background-color: var(--step-color, var(--ma-sage));
+  border-color: var(--step-color, var(--ma-sage));
+}
+
+.ma-stepper-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--ma-ink-muted);
+  white-space: nowrap;
+  font-family: var(--ma-font-mono);
+}
+
+.ma-stepper-label.done {
+  color: var(--ma-ink);
+}
+
+.ma-stepper-line {
+  flex: 1;
+  min-width: 24px;
+  height: 0;
+  border-top: 2px dashed var(--ma-rule);
+  margin: 11px 6px 0;
+}
+
+.ma-stepper-line.done {
+  border-top-color: var(--step-color, var(--ma-sage));
+}
+
+.ma-cancelled-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--ma-rust);
+  font-family: var(--ma-font-mono);
+}
+
+/* ---------- Profile form ---------- */
+.ma-form {
+  max-width: 420px;
+  width: 100%;
+}
+
+.ma-field {
+  margin-bottom: 16px;
+}
+
+.ma-label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ma-ink-muted);
+  margin-bottom: 6px;
+}
+
+.ma-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--ma-radius);
+  border: 1px solid var(--ma-rule);
+  background-color: var(--ma-card);
+  color: var(--ma-ink);
+  font-size: 14px;
+  font-family: var(--ma-font-body);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ma-input:focus {
+  border-color: var(--ma-rust);
+  box-shadow: 0 0 0 3px rgba(166, 67, 43, 0.12);
+}
+
+.ma-btn-primary {
+  margin-top: 4px;
+  padding: 11px 22px;
+  border-radius: var(--ma-radius);
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background-color: var(--ma-rust);
+  color: #fbf9f4;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  font-family: var(--ma-font-body);
+}
+
+.ma-btn-primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.ma-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---------- Addresses placeholder ---------- */
+.ma-placeholder-card {
+  padding: 20px;
+  border-radius: var(--ma-radius);
+  border: 1px solid var(--ma-rule);
+  background-color: var(--ma-card);
+}
+
+/* ---------- Focus visibility (accessibility) ---------- */
+.ma-nav-item:focus-visible,
+.ma-btn-outline:focus-visible,
+.ma-btn-primary:focus-visible,
+.ma-track-btn:focus-visible,
+.ma-input:focus-visible {
+  outline: 2px solid var(--ma-rust);
+  outline-offset: 2px;
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .ma-chevron,
+  .ma-nav-item,
+  .ma-btn-outline,
+  .ma-btn-primary {
+    transition: none;
+  }
+}
