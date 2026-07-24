@@ -107,7 +107,7 @@ const Navbar = () => {
           </nav>
           
 
-          <a href="#" className="bzak-phone">
+          <a href="tel:+923157724828" className="bzak-phone">
             <FaPhoneAlt className="me-2" />
             +923157724828
           </a>

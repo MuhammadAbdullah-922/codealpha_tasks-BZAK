@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { FaTrashAlt } from "react-icons/fa";
 
@@ -53,22 +53,22 @@ export default function Wishlist() {
   };
 
   useEffect(() => {
-    loadWishlist();
-  }, []);
+  loadWishlist();
+}, [loadWishlist]);
 
-  const loadWishlist = async () => {
-    try {
-      const res = await getWishlist();
-      const items = res.data.wishlist || [];
-      setWishlist(items);
-      // Keep the navbar badge count in sync with exactly what's shown here
-      setWishlistFromItems(items);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const loadWishlist = useCallback(async () => {
+  try {
+    const res = await getWishlist();
+    const items = res.data.wishlist || [];
+    setWishlist(items);
+    setWishlistFromItems(items);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    setLoading(false);
+  }
+}, [setWishlistFromItems]);
+  
 
   // Goes through the shared WishlistContext so the navbar badge count
   // updates instantly, instead of calling the API directly and leaving

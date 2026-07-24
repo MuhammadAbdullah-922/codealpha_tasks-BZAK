@@ -59,7 +59,7 @@ export default function Checkout() {
 
   const [deliveryMethod, setDeliveryMethod] = useState("free");
   const [paymentMethod, setPaymentMethod] = useState("cod");
-  const [walletNumber, setWalletNumber] = useState("");
+ 
   const [comments, setComments] = useState("");
   const [transactionId, setTransactionId] = useState("");
   const [senderNumber, setSenderNumber] = useState("");
