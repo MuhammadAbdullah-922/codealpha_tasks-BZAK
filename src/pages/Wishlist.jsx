@@ -52,11 +52,7 @@ export default function Wishlist() {
     showToast._t = window.setTimeout(() => setToast(null), 2200);
   };
 
-  useEffect(() => {
-  loadWishlist();
-}, [loadWishlist]);
-
-  const loadWishlist = useCallback(async () => {
+ const loadWishlist = useCallback(async () => {
   try {
     const res = await getWishlist();
     const items = res.data.wishlist || [];
@@ -68,6 +64,10 @@ export default function Wishlist() {
     setLoading(false);
   }
 }, [setWishlistFromItems]);
+
+useEffect(() => {
+  loadWishlist();
+}, [loadWishlist]);
   
 
   // Goes through the shared WishlistContext so the navbar badge count
