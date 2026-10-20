@@ -2,14 +2,48 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+
+    <!-- Favicon (place your logo.png file inside the /public folder) -->
+    <link rel="icon" type="image/png" href="%PUBLIC_URL%/logo.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
+
+    <!-- SEO Meta Tags -->
+  <title>B-ZAK | Premium Streetwear Clothing Brand in Pakistan</title>
     <meta
       name="description"
-      content="Web site created using create-react-app"
+      content="B-ZAK - Pakistan's premium streetwear brand. Shop hoodies, t-shirts & jackets online with Cash on Delivery (COD) available nationwide across Pakistan."
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <meta
+      name="keywords"
+      content="B-ZAK, streetwear Pakistan, online clothing Pakistan, streetwear brand, hoodies Pakistan, t-shirts Pakistan, COD clothing Pakistan, premium streetwear, buy streetwear online Pakistan, bzakapparel"
+    />
+    <meta name="author" content="B-ZAK" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://bzakapparel.com/" />
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:title" content="B-ZAK | Premium Streetwear Pakistan" />
+    <meta
+      property="og:description"
+      content="Shop the latest streetwear collection at B-ZAK. Cash on Delivery available all over Pakistan."
+    />
+    <meta property="og:image" content="https://bzakapparel.com/logo.png" />
+    <meta property="og:url" content="https://bzakapparel.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="B-ZAK" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="B-ZAK | Premium Streetwear Pakistan" />
+    <meta
+      name="twitter:description"
+      content="Shop the latest streetwear collection at B-ZAK with COD available nationwide."
+    />
+    <meta name="twitter:image" content="https://bzakapparel.com/logo.png" />
+
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -24,7 +58,26 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Organization Structured Data (helps Google show your logo in search results) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "B-ZAK",
+        "url": "https://bzakapparel.com",
+        "logo": "https://bzakapparel.com/logo.png",
+        "description": "B-ZAK - Pakistan's premium streetwear brand offering hoodies, t-shirts, and jackets with Cash on Delivery nationwide.",
+        "sameAs": []
+      }
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

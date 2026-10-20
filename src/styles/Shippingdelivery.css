@@ -1,0 +1,272 @@
+/* ================= Shipping & Delivery Page ================= */
+/* Rebuilt to match the Privacy Policy page's card system, so both
+   legal/info pages share one visual language instead of two. */
+
+.bzak-shipping-breadcrumb {
+  background: linear-gradient(90deg, #ec4b3c, #f0644f);
+  padding: 46px 0;
+  margin-top: 0;
+}
+
+.bzak-shipping-breadcrumb-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.bzak-shipping-breadcrumb-inner h1 {
+  color: #fff;
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin: 0;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+}
+
+.bzak-shipping-breadcrumb-path {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+}
+
+.bzak-shipping-breadcrumb-path a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.bzak-shipping-breadcrumb-path a:hover {
+  text-decoration: underline;
+}
+
+/* ================= Policy Content ================= */
+
+.bzak-shipping {
+  padding: 70px 0 24px;
+  background: #fff;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+  overflow-x: hidden;
+}
+
+.bzak-shipping .container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding-left: 16px;
+  padding-right: 16px;
+  box-sizing: border-box;
+}
+
+.bzak-shipping-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #222;
+  margin: 0 0 20px;
+  position: relative;
+}
+
+.bzak-shipping-title::after {
+  content: "";
+  display: block;
+  width: 55px;
+  height: 3px;
+  background: #ec4b3c;
+  margin-top: 12px;
+  border-radius: 3px;
+}
+
+/* Plain left-aligned text everywhere — justify was creating uneven
+   word-gaps on both desktop and mobile, so it's gone for good. */
+.bzak-shipping-intro {
+  color: #666;
+  font-size: 0.98rem;
+  line-height: 1.8;
+  max-width: 780px;
+  margin: 0 0 36px;
+  text-align: left;
+}
+
+/* ---------- Section cards (same pattern as Privacy Policy) ---------- */
+.bzak-shipping-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.bzak-shipping-card {
+  display: flex;
+  gap: 24px;
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 28px 32px;
+  box-sizing: border-box;
+}
+
+.bzak-shipping-num {
+  flex-shrink: 0;
+  color: #ec4b3c;
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.bzak-shipping-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.bzak-shipping-card-body h5 {
+  color: #222;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+.bzak-shipping-card-body p {
+  color: #666;
+  font-size: 0.92rem;
+  line-height: 1.75;
+  text-align: left;
+  margin: 0 0 12px;
+}
+
+.bzak-shipping-card-body p:last-child {
+  margin-bottom: 0;
+}
+
+.bzak-shipping-card-body strong {
+  color: #222;
+}
+
+/* ================= Feature Cards ================= */
+/* Plain CSS grid instead of Bootstrap row/col — no negative margins,
+   no gutter math, so left/right spacing is identical on every screen
+   size without extra "safety net" overrides. */
+
+.bzak-shipping-features {
+  padding: 56px 0 80px;
+  background: #fff;
+}
+
+.bzak-shipping-features .container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-left: 16px;
+  padding-right: 16px;
+  box-sizing: border-box;
+}
+
+.bzak-shipping-features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.bzak-shipping-feature-card {
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 32px 24px;
+  text-align: center;
+  box-sizing: border-box;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.bzak-shipping-feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  background: #000;
+}
+
+.bzak-shipping-feature-card:hover h5,
+.bzak-shipping-feature-card:hover p {
+  color: #fff;
+}
+
+.bzak-shipping-feature-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #fdece9;
+  color: #ec4b3c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin: 0 auto 17px;
+  transition: all 0.25s ease;
+}
+
+.bzak-shipping-feature-card:hover .bzak-shipping-feature-icon {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.bzak-shipping-feature-card h5 {
+  font-weight: 700;
+  color: #222;
+  margin: 0 0 10px;
+}
+
+.bzak-shipping-feature-card p {
+  color: #777;
+  font-size: 0.84rem;
+  line-height: 1.65;
+  margin: 0;
+  text-align: center;
+}
+
+/* ================= Responsive ================= */
+
+@media (max-width: 991.98px) {
+  .bzak-shipping-features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767.98px) {
+  .bzak-shipping-breadcrumb {
+    padding: 32px 0;
+  }
+
+  .bzak-shipping-breadcrumb-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .bzak-shipping-breadcrumb-inner h1 {
+    font-size: 1.4rem;
+  }
+
+  .bzak-shipping {
+    padding: 44px 0 8px;
+  }
+
+  .bzak-shipping-title {
+    font-size: 1.5rem;
+  }
+
+  .bzak-shipping-intro {
+    font-size: 0.92rem;
+  }
+
+  .bzak-shipping-card {
+    flex-direction: column;
+    gap: 8px;
+    padding: 22px 20px;
+  }
+
+  .bzak-shipping-features {
+    padding: 32px 0 50px;
+  }
+
+  .bzak-shipping-features-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .bzak-shipping-card-body h5 {
+    font-size: 1rem;
+  }
+}

@@ -3,7 +3,7 @@ import "../styles/register.css";
 import logo from "../assets/logo.jpeg";
 
 // 👉 Apne backend ka base URL yahan set karein
-const API_BASE_URL = "http://localhost:8000/api";
+const API_BASE_URL = "https://api.bzakapparel.com/api";
 
 // Fields ka config — yahan se add/remove/edit karke poora form badal sakte hain
 const FIELDS = [

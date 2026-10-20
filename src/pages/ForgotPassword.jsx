@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../styles/login.css";
 import logo from "../assets/logo.jpeg";
 
-const API_BASE_URL = "http://localhost:8000/api";
+const API_BASE_URL = "https://api.bzakapparel.com/api";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");

@@ -1,5 +1,6 @@
 /* ==========================================================
    Cart Page — Bzack
+   Fully responsive: desktop / tablet / mobile / small mobile
    ========================================================== */
 
 .cart-page {
@@ -57,6 +58,8 @@
 .cart-table-wrap {
   background: #fff;
   border-radius: 10px;
+  overflow-x: auto; /* prevents layout break if content is ever too wide */
+  -webkit-overflow-scrolling: touch;
 }
 
 .cart-table {
@@ -71,6 +74,7 @@
   color: #6b7280;
   padding: 0 12px 16px;
   border-bottom: 1px solid #ececec;
+  white-space: nowrap;
 }
 
 .cart-table td {
@@ -226,6 +230,7 @@
   font-size: 14px;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.1s ease;
+  min-height: 44px; /* touch-friendly tap target */
 }
 
 .cart-checkout-btn:hover {
@@ -236,11 +241,36 @@
   transform: scale(0.98);
 }
 
-/* ---------- Responsive (cart table) ---------- */
+/* ==========================================================
+   Responsive — Cart Table
+   Breakpoints: 1024px (tablet), 700px (large mobile),
+   480px (mobile), 360px (small mobile)
+   ========================================================== */
 
+/* ---- Tablet ---- */
+@media (max-width: 1024px) {
+  .cart-page {
+    padding: 40px 20px 64px;
+  }
+
+  .popular-products__grid {
+    gap: 18px;
+  }
+}
+
+/* ---- Large mobile / small tablet: switch table to stacked cards ---- */
 @media (max-width: 700px) {
   .cart-page {
-    padding: 32px 16px 60px;
+    padding: 28px 16px 56px;
+  }
+
+  .cart-page__title {
+    font-size: 21px;
+    margin-bottom: 20px;
+  }
+
+  .cart-table-wrap {
+    overflow-x: visible;
   }
 
   .cart-table thead {
@@ -265,21 +295,100 @@
     padding: 6px 0;
   }
 
+  /* Label each stacked cell so data still makes sense without the header row */
+  .cart-table td.col-price::before,
+  .cart-table td.col-total::before,
+  .cart-table td.col-qty::before {
+    content: attr(data-label);
+    display: inline-block;
+    min-width: 70px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #9ca3af;
+  }
+
   .col-action {
     text-align: left;
+  }
+
+  .cart-product__img {
+    width: 52px;
+    height: 52px;
   }
 
   .cart-footer-row {
     flex-direction: column;
     align-items: stretch;
+    gap: 14px;
   }
 
   .cart-footer-row__right {
     justify-content: space-between;
+    width: 100%;
   }
 
   .cart-checkout-btn {
     flex: 1;
+    padding: 14px 0;
+  }
+
+  .cart-continue-link {
+    text-align: center;
+  }
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 480px) {
+  .cart-page {
+    padding: 24px 14px 48px;
+  }
+
+  .cart-page__title {
+    font-size: 19px;
+  }
+
+  .qty-stepper {
+    gap: 12px;
+    padding: 5px 10px;
+  }
+
+  .qty-stepper__btn {
+    width: 20px;
+    height: 20px;
+  }
+
+  .cart-subtotal strong {
+    font-size: 15px;
+  }
+}
+
+/* ---- Small mobile (very narrow devices) ---- */
+@media (max-width: 360px) {
+  .cart-page {
+    padding: 20px 10px 40px;
+  }
+
+  .cart-product {
+    gap: 10px;
+  }
+
+  .cart-product__img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .cart-product__name {
+    font-size: 13px;
+  }
+
+  .cart-footer-row__right {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .cart-checkout-btn {
+    width: 100%;
   }
 }
 
@@ -290,7 +399,7 @@
 .popular-products {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 56px 0 40px;
+  padding: 56px 24px 40px;
 }
 
 .popular-products__header {
@@ -329,22 +438,6 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
-}
-
-@media (max-width: 900px) {
-  .popular-products__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 480px) {
-  .popular-products__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .popular-products {
-    padding: 40px 0 24px;
-  }
 }
 
 /* ---------- Card ---------- */
@@ -395,11 +488,26 @@
   cursor: pointer;
   opacity: 0;
   transition: bottom 0.25s ease, opacity 0.25s ease, background 0.2s ease;
+  min-height: 40px;
 }
 
-.pp-card__img-wrap:hover .pp-card__add-btn {
-  bottom: 12px;
-  opacity: 1;
+/* Desktop / any device that actually supports hover */
+@media (hover: hover) and (pointer: fine) {
+  .pp-card__img-wrap:hover .pp-card__add-btn {
+    bottom: 12px;
+    opacity: 1;
+  }
+}
+
+/* Touch devices: hover never fires, so keep the button visible and static
+   instead of hidden forever behind an unreachable :hover state */
+@media (hover: none), (pointer: coarse) {
+  .pp-card__add-btn {
+    position: static;
+    opacity: 1;
+    margin-top: 10px;
+    width: 100%;
+  }
 }
 
 .pp-card__add-btn:hover {
@@ -476,4 +584,71 @@
 @keyframes pp-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
+}
+
+/* ==========================================================
+   Responsive — Popular Products
+   ========================================================== */
+
+/* ---- Tablet: 3 columns ---- */
+@media (max-width: 1024px) {
+  .popular-products__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ---- Large mobile / small tablet: 2 columns ---- */
+@media (max-width: 900px) {
+  .popular-products__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .popular-products {
+    padding: 40px 16px 32px;
+  }
+
+  .popular-products__title {
+    font-size: 20px;
+  }
+
+  .popular-products__subtitle {
+    font-size: 13px;
+  }
+}
+
+/* ---- Mobile: 1 column, larger tap-friendly cards ---- */
+@media (max-width: 480px) {
+  .popular-products {
+    padding: 32px 14px 24px;
+  }
+
+  .popular-products__header {
+    margin-bottom: 24px;
+  }
+
+  .popular-products__grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .pp-card__name {
+    font-size: 15px;
+  }
+
+  .pp-card__price {
+    font-size: 15px;
+  }
+}
+
+/* ---- Small mobile ---- */
+@media (max-width: 360px) {
+  .popular-products {
+    padding: 24px 10px 20px;
+  }
+
+  .popular-products__title {
+    font-size: 18px;
+  }
 }

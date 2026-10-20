@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   FaMapMarkerAlt,
@@ -12,10 +12,10 @@ import { submitContactForm } from "../services/api";
 
 // Static contact details — edit directly here whenever they change
 const info = {
-  address: "Street No. 15, House No. 14, New Multan, Multan, Pakistan",
+  address: "Multan, Pakistan",
   phone: "+92 315 7724828",
   email: "Bzakapparel@gmail.com",
-  hours: "Mon - Sat: 9:00 AM - 8:00 PM",
+  hours: "24/7",
   mapEmbedUrl:
     "https://maps.google.com/maps?q=Street%20No.%2015%2C%20House%20No.%2014%2C%20New%20Multan%2C%20Multan%2C%20Pakistan&t=&z=15&ie=UTF8&iwloc=&output=embed",
 };
@@ -26,6 +26,31 @@ const Contact = () => {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle"); // idle | sending | success | error
+
+  // Only render the Google Maps iframe for REAL visitors, never during
+  // the `react-snap` postbuild step. react-snap crawls the site with an
+  // older headless Chrome bundled inside puppeteer — Google's embedded
+  // map script uses modern syntax (optional chaining) that engine can't
+  // parse, which throws "SyntaxError: Unexpected token '?'" and breaks
+  // the build.
+  //
+  // react-snap identifies itself by appending "ReactSnap" to the
+  // browser's userAgent string during the crawl, so we check for that
+  // BEFORE ever rendering the iframe — a `mounted` flag set only inside
+  // useEffect isn't enough on its own, because react-snap runs a real
+  // browser too and fires effects, so the iframe still mounted and
+  // crashed the snap. Checking userAgent guards against that.
+  const isReactSnap =
+    typeof navigator === "object" &&
+    typeof navigator.userAgent === "string" &&
+    navigator.userAgent.indexOf("ReactSnap") !== -1;
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    if (!isReactSnap) {
+      setMounted(true);
+    }
+  }, [isReactSnap]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -217,16 +242,32 @@ const Contact = () => {
             {/* MAP + HOURS */}
             <div className="col-lg-6">
               <div className="bzak-contact-map">
-                <iframe
-                  src={info.mapEmbedUrl}
-                  title="B-ZAK Location"
-                  width="100%"
-                  height="320"
-                  style={{ border: 0 }}
-                  allowFullScreen=""
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                ></iframe>
+                {mounted ? (
+                  <iframe
+                    src={info.mapEmbedUrl}
+                    title="B-ZAK Location"
+                    width="100%"
+                    height="320"
+                    style={{ border: 0 }}
+                    allowFullScreen=""
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                ) : (
+                  // Lightweight placeholder shown during react-snap's
+                  // static crawl, and briefly in real browsers before
+                  // useEffect runs. Keeps the layout height stable so
+                  // nothing jumps once the real map loads in.
+                  <div
+                    style={{
+                      width: "100%",
+                      height: 320,
+                      background: "#f0f0f0",
+                      borderRadius: 8,
+                    }}
+                    aria-hidden="true"
+                  />
+                )}
               </div>
 
               <div className="bzak-contact-hours">

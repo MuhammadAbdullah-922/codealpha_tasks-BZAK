@@ -1,19 +1,36 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL: "https://api.bzakapparel.com/api",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
   },
 });
 
+// Fallback UUID generator — used when crypto.randomUUID() isn't available
+// (e.g. during react-snap's build-time prerender, which loads pages over
+// a non-secure http://localhost origin where the Crypto API's randomUUID
+// method is not exposed by the headless browser).
+const generateUUID = () => {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+
+  // RFC4122-ish fallback using Math.random (good enough for a guest cart token)
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
+
 // Guests (not logged in) get a random token stored in localStorage so the
 // Laravel side can group their cart items without requiring an account.
 const getGuestCartToken = () => {
   let token = localStorage.getItem("bzack_cart_token");
   if (!token) {
-    token = crypto.randomUUID();
+    token = generateUUID();
     localStorage.setItem("bzack_cart_token", token);
   }
   return token;
@@ -46,6 +63,13 @@ export const getProducts = (params) => api.get("/products", { params });
 export const getFeaturedProducts = () => api.get("/products/featured");
 
 export const getNewArrivals = () => api.get("/products/new-arrivals");
+
+// NEW: Popular products (sorted by total quantity sold on the backend)
+export const getPopularProducts = () => api.get("/products/popular");
+
+// NEW: Distinct colors actually used across active products — powers the
+// dynamic "Filter By Color" sidebar on the Product Details page.
+export const getProductColors = () => api.get("/products/colors");
 
 // Settings (public — used by Footer.jsx)
 export const getSettings = () => api.get("/settings");
@@ -86,7 +110,7 @@ export const clearCart = () => api.delete("/cart");
 
 // Handles every shape our Laravel API returns:
 //   { categories: [...] }                        -> plain array
-//   { products: [...] }                           -> plain array (featured, new-arrivals)
+//   { products: [...] }                           -> plain array (featured, new-arrivals, popular)
 //   { products: { data: [...], current_page: 1 } } -> paginated (index)
 export const extractList = (response) => {
   const body = response?.data;
@@ -101,6 +125,14 @@ export const extractList = (response) => {
 };
 
 
+// FIXED: previously this always prepended "storage/" to whatever path came
+// back from the backend. Some records (e.g. footer-gallery images) are
+// saved with the "storage/" segment already included in the `image` field,
+// which produced a broken double URL like:
+//   http://localhost:8000/storage/storage/footer-gallery/xxx.jpg
+// This version strips any leading slash and only adds "storage/" if the
+// path doesn't already start with it, so it works no matter which format
+// a given table/controller saved the path in.
 export const getImageUrl = (path) => {
   if (!path) {
     return "https://via.placeholder.com/300x300?text=No+Image";
@@ -110,7 +142,15 @@ export const getImageUrl = (path) => {
     return path;
   }
 
-  return `http://localhost:8000/storage/${path}`;
+  const base = (api.defaults.baseURL || "").replace(/\/api\/?$/, "");
+
+  let cleanPath = path.replace(/^\/+/, "");
+
+  if (!cleanPath.startsWith("storage/")) {
+    cleanPath = `storage/${cleanPath}`;
+  }
+
+  return `${base}/${cleanPath}`;
 };
 // Reviews
 export const getReviews = (productId) =>

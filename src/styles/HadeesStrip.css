@@ -1,0 +1,88 @@
+.bzak-hadees-strip {
+  width: 100%;
+  background: linear-gradient(90deg, #1f160b, #2a1e10, #1f160b);
+  color: #f2d98d;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 12px 0 16px;
+  border-bottom: 2px solid #ec4b3c;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.bzak-hadees-track {
+  display: inline-flex;
+  align-items: center;
+  animation: bzak-marquee 30s linear infinite;
+  width: max-content;
+  margin-top: 111px;
+}
+
+.bzak-hadees-group {
+  display: inline-flex;
+  align-items: center;
+  padding-right: 40px;
+}
+
+.bzak-hadees-arabic {
+  font-family: "Noto Naskh Arabic", "Amiri", "Traditional Arabic", serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  direction: rtl;
+  unicode-bidi: isolate;
+  color: #f2d98d;
+  line-height: 2.2;
+  padding-top: 4px;
+  display: inline-block;
+}
+
+.bzak-hadees-sep {
+  margin: 0 18px;
+  color: #ec4b3c;
+  font-size: 1.1rem;
+}
+
+.bzak-hadees-english {
+  font-size: 1.15rem;
+  font-weight: 500;
+  font-style: italic;
+  color: #fdf3e0;
+  letter-spacing: 0.01em;
+}
+
+@keyframes bzak-marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+.bzak-hadees-strip:hover .bzak-hadees-track {
+  animation-play-state: paused;
+}
+
+@media (max-width: 575.98px) {
+  .bzak-hadees-arabic {
+    font-size: 1.1rem;
+  }
+  .bzak-hadees-english {
+    font-size: 0.9rem;
+  }
+  .bzak-hadees-group {
+    padding-right: 24px;
+  }
+  .bzak-hadees-sep {
+    margin: 0 10px;
+  }
+   .bzak-hadees-track {
+  margin-top: 50px;
+}
+}
+.bzak-hadees-strip {
+  overflow: hidden;
+  width: 100%;
+}

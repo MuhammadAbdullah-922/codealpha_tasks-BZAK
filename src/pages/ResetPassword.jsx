@@ -3,12 +3,12 @@ import { useSearchParams } from "react-router-dom";
 import "../styles/login.css";
 import logo from "../assets/logo.jpeg";
 
-const API_BASE_URL = "http://localhost:8000/api";
+const API_BASE_URL = "https://api.bzakapparel.com/api";
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
   // Laravel email se link is format mein aata hai:
-  // http://localhost:3000/reset-password?token=xxxx&email=user@example.com
+  // https://bzakapparel.com/reset-password?token=xxxx&email=user@example.com
   const token = searchParams.get("token") || "";
   const emailFromUrl = searchParams.get("email") || "";
 

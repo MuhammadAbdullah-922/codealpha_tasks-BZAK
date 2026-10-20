@@ -199,6 +199,41 @@
   font-size: 0.85rem;
   margin: 0;
 }
+.bzak-contact-card:hover,
+.bzak-contact-card:active {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+  background: #000;
+  color: #fff;
+}
+.bzak-contact-card:hover h5,
+.bzak-contact-card:hover p,
+.bzak-contact-card:active h5,
+.bzak-contact-card:active p {
+  color: #fff;
+}
+.bzak-contact-card:hover .bzak-contact-icon,
+.bzak-contact-card:active .bzak-contact-icon {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+.bzak-contact-card:hover a,
+.bzak-contact-card:active a {
+  color: #fff;
+}
+.bzak-contact-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #fdece9;
+  color: #ec4b3c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin: 0 auto 16px;
+  transition: background 0.25s ease, color 0.25s ease;
+}
 
 /* ---------- Responsive ---------- */
 @media (max-width: 767.98px) {
@@ -210,5 +245,30 @@
   }
   .bzak-contact-title {
     font-size: 1.5rem;
+  }
+
+  /* Force symmetric left/right spacing for the contact cards row */
+  .bzak-contact-info .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .bzak-contact-info .row > [class*="col-"] {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .bzak-contact-card {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .bzak-contact-main .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .bzak-contact-main .row > [class*="col-"] {
+    padding-left: 12px;
+    padding-right: 12px;
   }
 }

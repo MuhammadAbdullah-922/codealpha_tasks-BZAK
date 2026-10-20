@@ -2,9 +2,23 @@
    Checkout Page — Bzack
    ========================================================== */
 
+/* Safety net: force border-box everywhere inside this page so no
+   input/box with padding can push past its container width, and
+   clip anything that still slips past 100% (e.g. a fixed-size QR
+   code on very narrow screens) instead of creating a scrollbar. */
+.checkout-page,
+.checkout-page * {
+  box-sizing: border-box;
+}
+
+.checkout-page {
+  overflow-x: hidden;
+}
+
 .checkout-breadcrumb {
   background: linear-gradient(90deg, #ec4b3c, #f0644f);
   padding: 32px 24px;
+  overflow-x: hidden;
 }
 
 .checkout-breadcrumb__inner {
@@ -74,12 +88,14 @@
   grid-template-columns: 1fr 1.2fr;
   gap: 24px;
   align-items: start;
+  min-width: 0;
 }
 
 .checkout-col {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-width: 0;
 }
 
 .checkout-card {
@@ -87,6 +103,7 @@
   border: 1px solid #f0f0f0;
   border-radius: 10px;
   padding: 22px;
+  min-width: 0;
 }
 
 .checkout-card__title {
@@ -107,13 +124,17 @@
   color: #9ca3af;
   line-height: 1.6;
   margin: 10px 0 14px;
+  overflow-wrap: anywhere;
 }
 
-/* Summary */
+/* ==========================================================
+   Summary
+   ========================================================== */
 
 .checkout-summary-row {
   display: flex;
   justify-content: space-between;
+  gap: 12px;
   font-size: 13.5px;
   color: #4b5563;
   padding: 6px 0;
@@ -139,6 +160,7 @@
   display: flex;
   gap: 12px;
   align-items: center;
+  min-width: 0;
 }
 
 .checkout-summary-item img,
@@ -156,6 +178,7 @@
   font-weight: 500;
   color: #1a1a1a;
   margin-bottom: 2px;
+  overflow-wrap: anywhere;
 }
 
 .checkout-summary-item__price {
@@ -164,7 +187,9 @@
   font-weight: 600;
 }
 
-/* Radios */
+/* ==========================================================
+   Payment Radios
+   ========================================================== */
 
 .checkout-radio-row {
   display: flex;
@@ -190,6 +215,7 @@
 
 .checkout-radio input {
   accent-color: #ef4444;
+  flex-shrink: 0;
 }
 
 .checkout-radio small {
@@ -199,11 +225,14 @@
   font-weight: 400;
 }
 
-/* Fields */
+/* ==========================================================
+   Fields
+   ========================================================== */
 
 .checkout-field {
   display: block;
   margin-bottom: 14px;
+  min-width: 0;
 }
 
 .checkout-field span {
@@ -216,12 +245,21 @@
 .checkout-field input,
 .checkout-field textarea {
   width: 100%;
+  max-width: 100%;
   border: 1px solid #e5e5e5;
   border-radius: 6px;
   padding: 10px 12px;
   font-size: 13.5px;
   font-family: inherit;
   outline: none;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.checkout-field textarea {
+  resize: vertical;
+  min-height: 90px;
 }
 
 .checkout-field input:focus,
@@ -233,9 +271,12 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
+  min-width: 0;
 }
 
-/* Buttons */
+/* ==========================================================
+   Buttons
+   ========================================================== */
 
 .checkout-btn {
   padding: 10px 26px;
@@ -247,6 +288,7 @@
   font-size: 13.5px;
   cursor: pointer;
   transition: background 0.2s ease;
+  width: 100%;
 }
 
 .checkout-btn:hover {
@@ -262,6 +304,11 @@
   display: flex;
   align-items: center;
   gap: 18px;
+  flex-wrap: wrap;
+}
+
+.checkout-login-row .checkout-btn {
+  width: auto;
 }
 
 .checkout-link {
@@ -281,6 +328,7 @@
   font-size: 14px;
   cursor: pointer;
   transition: background 0.2s ease;
+  width: 100%;
 }
 
 .checkout-place-btn:hover {
@@ -298,33 +346,25 @@
   margin: 4px 0 12px;
 }
 
-/* Payment badges — plain styled text badges (no third-party logos) */
+/* ==========================================================
+   Delivery Charges
+   ========================================================== */
 
-
-
-
-
-/* ---------------- Responsive ---------------- */
-
-@media (max-width: 900px) {
-  .checkout-layout {
-    grid-template-columns: 1fr;
-  }
+.delivery-charge {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 13.5px;
+  color: #4b5563;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
 }
 
-@media (max-width: 480px) {
-  .checkout-page {
-    padding: 20px 16px 56px;
-  }
+/* ==========================================================
+   Payment Box
+   ========================================================== */
 
-  .checkout-card {
-    padding: 16px;
-  }
-
-  .checkout-form-grid {
-    grid-template-columns: 1fr;
-  }
-}
 .payment-box {
   margin-top: 18px;
   padding: 18px;
@@ -332,6 +372,7 @@
   border: 1px solid #e5e7eb;
   border-left: 4px solid #ef4444;
   border-radius: 8px;
+  min-width: 0;
 }
 
 .payment-box h4 {
@@ -346,6 +387,7 @@
   color: #4b5563;
   font-size: 14px;
   line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
 .payment-box strong {
@@ -354,6 +396,7 @@
 
 .payment-box input {
   width: 100%;
+  max-width: 100%;
   margin-top: 12px;
   padding: 12px;
   border: 1px solid #d1d5db;
@@ -361,6 +404,7 @@
   font-size: 14px;
   outline: none;
   transition: 0.2s;
+  box-sizing: border-box;
 }
 
 .payment-box input:focus {
@@ -374,4 +418,454 @@
   color: #6b7280;
   font-size: 13px;
   line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================================
+   Payment Screenshot
+   ========================================================== */
+
+.payment-box img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin-top: 8px;
+}
+
+.payment-proof-preview {
+  margin-top: 12px;
+  max-width: 100%;
+}
+
+.payment-proof-preview img {
+  width: 160px;
+  max-width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  display: block;
+  margin-top: 0;
+}
+
+/* ==========================================================
+   Bank Transfer — QR Payment
+   ========================================================== */
+
+.bank-payment-box {
+  text-align: left;
+  min-width: 0;
+}
+
+.bank-payment-box .payment-instruction {
+  color: #4b5563;
+  font-size: 13.5px;
+  line-height: 1.6;
+  margin: 0 0 18px;
+  overflow-wrap: anywhere;
+}
+
+/* The QR code is rendered by qrcode.react as an inline <svg> with a
+   fixed pixel size prop. On very narrow screens that fixed size can
+   push past the viewport, so we cap it responsively here regardless
+   of the size prop passed in JS. */
+.bank-qr-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  padding: 20px;
+  margin: 12px 0 10px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.bank-qr-wrapper:hover {
+  opacity: 0.85;
+  transform: scale(1.02);
+}
+
+.bank-qr-wrapper svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.bank-qr-image {
+  width: 220px;
+  max-width: 100%;
+  height: 220px;
+  object-fit: contain;
+  display: block;
+  margin: 0 !important;
+  border-radius: 4px !important;
+}
+
+.bank-payment-box .qr-note {
+  text-align: center;
+  color: #6b7280;
+  font-size: 12.5px;
+  margin: 10px 0 22px;
+}
+
+.bank-details-link {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ef4444;
+  text-decoration: none;
+}
+
+.bank-details-link:hover {
+  text-decoration: underline;
+}
+
+.bank-payment-box .checkout-field {
+  margin-bottom: 15px;
+}
+
+.bank-payment-box .checkout-field input[type="file"] {
+  background: #fff;
+  cursor: pointer;
+  padding: 10px;
+  max-width: 100%;
+}
+
+.bank-payment-box .checkout-field input[type="file"]::file-selector-button {
+  border: none;
+  background: #ef4444;
+  color: #fff;
+  padding: 8px 12px;
+  margin-right: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bank-payment-box .checkout-field input[type="file"]::file-selector-button:hover {
+  background: #dc2626;
+}
+
+/* ==========================================================
+   JazzCash / EasyPaisa File Input
+   ========================================================== */
+
+.payment-box input[type="file"] {
+  background: #fff;
+  cursor: pointer;
+  max-width: 100%;
+}
+
+.payment-box input[type="file"]::file-selector-button {
+  border: none;
+  background: #ef4444;
+  color: #fff;
+  padding: 8px 12px;
+  margin-right: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.payment-box input[type="file"]::file-selector-button:hover {
+  background: #dc2626;
+}
+
+/* ==========================================================
+   Responsive — Tablets / Small Laptops
+   ========================================================== */
+
+@media (max-width: 1024px) {
+  .checkout-page {
+    padding: 28px 20px 64px;
+  }
+
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-col {
+    gap: 18px;
+  }
+}
+
+/* ==========================================================
+   Responsive — Tablets
+   ========================================================== */
+
+@media (max-width: 768px) {
+  .checkout-breadcrumb {
+    padding: 24px 20px;
+  }
+
+  .checkout-breadcrumb__inner h1 {
+    font-size: 1.35rem;
+  }
+
+  .checkout-card {
+    padding: 18px;
+  }
+
+  .checkout-radio-row {
+    gap: 18px;
+  }
+
+  .bank-qr-wrapper {
+    padding: 16px;
+  }
+
+  .bank-qr-image {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+/* ==========================================================
+   Responsive — Mobile Phones
+   ========================================================== */
+
+@media (max-width: 480px) {
+  .checkout-breadcrumb {
+    padding: 20px 16px;
+  }
+
+  .checkout-breadcrumb__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .checkout-breadcrumb__inner h1 {
+    font-size: 1.2rem;
+  }
+
+  .checkout-breadcrumb__inner p {
+    font-size: 0.82rem;
+  }
+
+  .checkout-page {
+    padding: 20px 14px 56px;
+  }
+
+  .checkout-card {
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  .checkout-card__title {
+    font-size: 14px;
+  }
+
+  .checkout-form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .checkout-summary-row {
+    font-size: 13px;
+  }
+
+  .checkout-summary-row--total {
+    font-size: 14px;
+  }
+
+  .checkout-summary-item img,
+  .checkout-summary-item__placeholder {
+    width: 40px;
+    height: 40px;
+  }
+
+  .checkout-radio-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .checkout-login-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .checkout-login-row .checkout-btn {
+    width: 100%;
+  }
+
+  .checkout-place-btn {
+    padding: 13px 20px;
+    font-size: 13.5px;
+  }
+
+  .payment-box {
+    padding: 14px;
+  }
+
+  .payment-box h4 {
+    font-size: 15px;
+  }
+
+  .payment-box p,
+  .payment-box small {
+    font-size: 13px;
+  }
+
+  .bank-qr-wrapper {
+    padding: 14px;
+    margin-top: 14px;
+  }
+
+  .bank-qr-image {
+    width: 180px;
+    height: 180px;
+  }
+
+  .bank-payment-box .payment-instruction {
+    font-size: 13px;
+  }
+
+  .bank-payment-box .qr-note {
+    font-size: 12px;
+  }
+
+  .payment-proof-preview img {
+    width: 140px;
+    height: 160px;
+  }
+}
+
+/* ==========================================================
+   Responsive — Very Small Phones (360px and below)
+   ========================================================== */
+
+@media (max-width: 360px) {
+  .checkout-page {
+    padding: 16px 10px 48px;
+  }
+
+  .checkout-card {
+    padding: 14px;
+  }
+
+  .checkout-field input,
+  .checkout-field textarea,
+  .payment-box input {
+    padding: 9px 10px;
+    font-size: 13px;
+  }
+
+  .bank-qr-wrapper {
+    padding: 12px;
+  }
+
+  .bank-qr-image {
+    width: 150px;
+    height: 150px;
+  }
+
+  .checkout-place-btn,
+  .checkout-btn {
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+}
+
+/* ==========================================================
+   Responsive — Narrowest Phones (350px and below, e.g. 320px)
+   Absolute floor: everything here must fit inside 320px with zero
+   horizontal scroll.
+   ========================================================== */
+
+@media (max-width: 350px) {
+  .checkout-breadcrumb {
+    padding: 16px 12px;
+  }
+
+  .checkout-breadcrumb__inner h1 {
+    font-size: 1.05rem;
+  }
+
+  .checkout-page {
+    padding: 14px 8px 40px;
+  }
+
+  .checkout-col {
+    gap: 14px;
+  }
+
+  .checkout-card {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .checkout-card__title {
+    font-size: 13.5px;
+  }
+
+  .checkout-card__hint {
+    font-size: 12px;
+  }
+
+  .checkout-field span {
+    font-size: 12px;
+  }
+
+  .checkout-field input,
+  .checkout-field textarea,
+  .payment-box input {
+    padding: 8px 9px;
+    font-size: 12.5px;
+  }
+
+  .payment-box {
+    padding: 12px;
+  }
+
+  .payment-box h4 {
+    font-size: 14px;
+  }
+
+  .payment-box p,
+  .payment-box small {
+    font-size: 12.5px;
+  }
+
+  .bank-qr-wrapper {
+    padding: 10px;
+    margin-top: 10px;
+  }
+
+  .bank-qr-image {
+    width: 130px;
+    height: 130px;
+  }
+
+  .bank-payment-box .payment-instruction {
+    font-size: 12.5px;
+  }
+
+  .payment-proof-preview img {
+    width: 120px;
+    height: 140px;
+  }
+
+  .checkout-place-btn,
+  .checkout-btn {
+    padding: 11px 10px;
+    font-size: 12.5px;
+  }
+
+  .checkout-summary-item img,
+  .checkout-summary-item__placeholder {
+    width: 36px;
+    height: 36px;
+  }
+
+  .checkout-summary-item__name,
+  .checkout-summary-item__price {
+    font-size: 12px;
+  }
 }

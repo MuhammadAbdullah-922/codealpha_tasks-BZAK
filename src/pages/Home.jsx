@@ -16,6 +16,7 @@ import {
   getCategories,
   getFeaturedProducts,
   getNewArrivals,
+  getPopularProducts,
   getProducts,
   getImageUrl,
   extractList,
@@ -26,12 +27,16 @@ import {
 import "../styles/Home.css";
 
 const features = [
-  { icon: <FaTags />, title: "Best prices & offers", desc: "Orders $50 or more" },
-  { icon: <FaTruck />, title: "Free delivery", desc: "24/7 amazing services" },
+  { icon: <FaTags />, title: "Best prices & offers", desc: "buy from here" },
+  { icon: <FaTruck />, title: "COD across all over the Pakistan", desc: "24/7 amazing services" },
   { icon: <FaGift />, title: "Great daily deal", desc: "When you sign up" },
   { icon: <FaBoxOpen />, title: "Wide assortment", desc: "Mega discounts" },
-  { icon: <FaUndo />, title: "Easy returns", desc: "Within 30 days" },
+  { icon: <FaUndo />, title: "Easy returns", desc: "Within 7 days" },
 ];
+
+// How many "Featured Styles" cards are shown per slide (matches the
+// col-md-4 layout = 3 cards per row on desktop).
+const STYLES_PER_PAGE = 3;
 
 const formatPrice = (value) =>
   new Intl.NumberFormat("en-PK", {
@@ -68,13 +73,17 @@ const Home = () => {
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [categoriesError, setCategoriesError] = useState(false);
 
+  // ---------- Best Sellers (Featured / Popular / New added) ----------
+  const [activeTab, setActiveTab] = useState("featured"); // "featured" | "popular" | "new"
   const [bestSells, setBestSells] = useState([]);
   const [bestSellsLoading, setBestSellsLoading] = useState(true);
   const [bestSellsError, setBestSellsError] = useState(false);
 
+  // ---------- Featured Styles (now a functional slider) ----------
   const [styles, setStyles] = useState([]);
   const [stylesLoading, setStylesLoading] = useState(true);
   const [stylesError, setStylesError] = useState(false);
+  const [styleSlide, setStyleSlide] = useState(0); // index of first visible card
 
   const [deals, setDeals] = useState([]);
   const [dealsLoading, setDealsLoading] = useState(true);
@@ -96,6 +105,9 @@ const Home = () => {
     showToast._t = window.setTimeout(() => setToast(null), 2500);
   };
 
+  // Runs once: categories, "Featured Styles" (new arrivals), deals, wishlist.
+  // Best Sellers is intentionally NOT here — it has its own effect below
+  // that re-runs whenever the user switches tabs.
   useEffect(() => {
     let isMounted = true;
 
@@ -107,23 +119,21 @@ const Home = () => {
       .catch(() => isMounted && setCategoriesError(true))
       .finally(() => isMounted && setCategoriesLoading(false));
 
-    getFeaturedProducts()
-      .then((res) => {
-        if (!isMounted) return;
-        setBestSells(extractList(res));
-      })
-      .catch(() => isMounted && setBestSellsError(true))
-      .finally(() => isMounted && setBestSellsLoading(false));
-
     getNewArrivals()
       .then((res) => {
         if (!isMounted) return;
-        setStyles(extractList(res).slice(0, 3));
+        // NOTE: no .slice(0, 3) here anymore — we keep the full list so
+        // the arrows have something to page through. Visible cards are
+        // sliced separately below via `visibleStyles`.
+        setStyles(extractList(res));
       })
       .catch(() => isMounted && setStylesError(true))
       .finally(() => isMounted && setStylesLoading(false));
 
-    getProducts({ per_page: 4, page: 2 })
+    // NOTE: was page: 2 — with a small catalog that page can come back
+    // empty ("No deals right now"). page: 1 guarantees we always have
+    // something to show here as long as any products exist at all.
+    getProducts({ per_page: 4, page: 1 })
       .then((res) => {
         if (!isMounted) return;
         setDeals(extractList(res).slice(0, 4));
@@ -145,7 +155,7 @@ const Home = () => {
           });
           setWishlistMap(map);
         })
-        .catch(() => {});
+        .catch(() => { });
     }
 
     return () => {
@@ -153,31 +163,47 @@ const Home = () => {
     };
   }, []);
 
-  const handleAddToCart = async (productId) => {
-    if (!productId) return;
+  // Best Sellers: re-fetches whenever activeTab changes (Featured/Popular/New added)
+  useEffect(() => {
+    let isMounted = true;
+    setBestSellsLoading(true);
+    setBestSellsError(false);
 
-    const token = localStorage.getItem("token");
+    const fetchFn =
+      activeTab === "popular"
+        ? getPopularProducts
+        : activeTab === "new"
+          ? getNewArrivals
+          : getFeaturedProducts;
 
-    if (!token) {
-      navigate("/login");
-      return;
-    }
+    fetchFn()
+      .then((res) => {
+        if (!isMounted) return;
+        setBestSells(extractList(res));
+      })
+      .catch(() => isMounted && setBestSellsError(true))
+      .finally(() => isMounted && setBestSellsLoading(false));
+
+    return () => {
+      isMounted = false;
+    };
+  }, [activeTab]);
+
+  const handleAddToCart = async (productId, product) => {
+    if (!productId || !product) return;
 
     setAddingId(productId);
 
     try {
-      await addToCart(productId, 1);
+      await addToCart(productId, 1, product);
+      showToast("Product added to cart");
     } catch (err) {
-      console.log(err);
-
-      if (err?.response?.status === 401) {
-        navigate("/login");
-      }
+      console.error("Add to cart error:", err);
+      showToast("Unable to add product to cart", "error");
     } finally {
       setAddingId(null);
     }
   };
-
   // ---------- Wishlist toggle (backend-connected) ----------
   const handleToggleWishlist = async (product) => {
     if (!product?.id) return;
@@ -221,6 +247,18 @@ const Home = () => {
     }
   };
 
+  // ---------- Featured Styles slider logic ----------
+  const visibleStyles = styles.slice(styleSlide, styleSlide + STYLES_PER_PAGE);
+  const canGoPrevStyle = styleSlide > 0;
+  const canGoNextStyle = styleSlide + STYLES_PER_PAGE < styles.length;
+
+  const handlePrevStyle = () => {
+    if (canGoPrevStyle) setStyleSlide((s) => Math.max(0, s - STYLES_PER_PAGE));
+  };
+  const handleNextStyle = () => {
+    if (canGoNextStyle) setStyleSlide((s) => s + STYLES_PER_PAGE);
+  };
+
   return (
     <>
       <Helmet>
@@ -233,7 +271,7 @@ const Home = () => {
           name="keywords"
           content="B-ZAK, streetwear, mens clothing, polo shirts, hoodies, track pants, online clothing store"
         />
-        <link rel="canonical" href="https://www.bzak.com/" />
+        <link rel="canonical" href="https://bzakapparel.com/" />
       </Helmet>
 
       {/* Toast */}
@@ -289,9 +327,27 @@ const Home = () => {
           <div className="d-flex justify-content-between align-items-center flex-wrap mb-4">
             <h2 className="bzak-section-title mb-0">Best Sellers</h2>
             <div className="bzak-tabs">
-              <span className="active">Featured</span>
-              <span>Popular</span>
-              <span>New added</span>
+              <span
+                className={activeTab === "featured" ? "active" : ""}
+                onClick={() => setActiveTab("featured")}
+                style={{ cursor: "pointer" }}
+              >
+                Featured
+              </span>
+              <span
+                className={activeTab === "popular" ? "active" : ""}
+                onClick={() => setActiveTab("popular")}
+                style={{ cursor: "pointer" }}
+              >
+                Popular
+              </span>
+              <span
+                className={activeTab === "new" ? "active" : ""}
+                onClick={() => setActiveTab("new")}
+                style={{ cursor: "pointer" }}
+              >
+                New added
+              </span>
             </div>
           </div>
 
@@ -327,11 +383,20 @@ const Home = () => {
                       </div>
                       <p className="bzak-product-name">{p.name}</p>
                     </Link>
-                    <div className="bzak-stars">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <FaStar key={i} />
-                      ))}
-                    </div>
+                   {Number(p.review_count) > 0 && (
+  <div className="bzak-stars">
+    {Array.from({ length: 5 }).map((_, i) => (
+      <FaStar
+        key={i}
+        className={i < Math.round(Number(p.rating)) ? "active" : ""}
+      />
+    ))}
+
+    <span className="review-count">
+      ({p.review_count})
+    </span>
+  </div>
+)}
                     <div className="bzak-price">
                       <span className="new">{formatPrice(p.price)}</span>
                       {p.old_price && <span className="old">{formatPrice(p.old_price)}</span>}
@@ -351,7 +416,7 @@ const Home = () => {
                     )}
                     <button
                       className="bzak-add-btn"
-                      onClick={() => handleAddToCart(p.id)}
+                      onClick={() => handleAddToCart(p.id, p)}
                       disabled={addingId === p.id}
                     >
                       {addingId === p.id ? "Adding…" : "Add To Cart"}
@@ -364,7 +429,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Styles — heart is now live */}
+      {/* Featured Styles — heart is live, arrows now page through the list */}
       <section className="bzak-section">
         <div className="container">
           <div className="d-flex justify-content-between align-items-end flex-wrap mb-4">
@@ -373,8 +438,19 @@ const Home = () => {
               <h2 className="bzak-section-title mb-0">Featured Styles</h2>
             </div>
             <div className="bzak-slider-nav">
-              <button aria-label="Previous">&lsaquo;</button>
-              <button className="active" aria-label="Next">
+              <button
+                aria-label="Previous"
+                onClick={handlePrevStyle}
+                disabled={!canGoPrevStyle}
+              >
+                &lsaquo;
+              </button>
+              <button
+                className={canGoNextStyle ? "active" : ""}
+                aria-label="Next"
+                onClick={handleNextStyle}
+                disabled={!canGoNextStyle}
+              >
                 &rsaquo;
               </button>
             </div>
@@ -388,9 +464,9 @@ const Home = () => {
             <div className="bzak-loading-note">No new arrivals yet.</div>
           )}
 
-          {!stylesLoading && styles.length > 0 && (
+          {!stylesLoading && visibleStyles.length > 0 && (
             <div className="row g-4">
-              {styles.map((d) => {
+              {visibleStyles.map((d) => {
                 const isWished = Boolean(wishlistMap[d.id]);
                 const isBusy = wishBusyId === d.id;
                 return (
@@ -435,9 +511,10 @@ const Home = () => {
         <div className="container">
           <div className="d-flex justify-content-between align-items-center mb-4">
             <h2 className="bzak-section-title mb-0">Deals Of The Day</h2>
-            <a href="/shop" className="bzak-link">
+
+            <Link to="/shop" className="bzak-link">
               All Deals &rsaquo;
-            </a>
+            </Link>
           </div>
 
           {dealsLoading && <div className="bzak-loading-note">Loading deals…</div>}
@@ -472,7 +549,7 @@ const Home = () => {
                         </div>
                         <button
                           className="bzak-deal-add"
-                          onClick={() => handleAddToCart(d.id)}
+                          onClick={() => handleAddToCart(d.id, d)}
                           disabled={addingId === d.id}
                         >
                           {addingId === d.id ? "…" : "+ Add"}

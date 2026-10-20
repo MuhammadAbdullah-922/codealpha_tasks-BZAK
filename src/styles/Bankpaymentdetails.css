@@ -1,0 +1,188 @@
+.bank-details-page {
+  min-height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 48px 16px;
+  background: #f7f7f7;
+}
+
+.bank-details-card {
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 32px 24px;
+}
+
+.bank-details-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ec4b3c;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.bank-details-back-btn:hover {
+  color: #d63a2c;
+}
+
+.bank-details-back-btn--bottom {
+  margin-top: 24px;
+  margin-bottom: 0;
+  justify-content: center;
+  width: 100%;
+  padding: 10px 0;
+  border: 1px solid #ec4b3c;
+  border-radius: 8px;
+}
+
+.bank-details-back-btn--bottom:hover {
+  background: #fdf1ef;
+  color: #d63a2c;
+}
+
+.bank-details-card__header h1 {
+  font-size: 22px;
+  margin: 0 0 6px;
+  color: #111;
+}
+
+.bank-details-card__header p {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 24px;
+}
+
+/* Real Meezan Scan & Pay QR image shown on this page */
+.bank-details-qr-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  margin: 4px 0 24px;
+}
+
+.bank-details-qr-image {
+  width: 220px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+.bank-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.bank-details-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.bank-details-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bank-details-row__label {
+  font-size: 12px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.bank-details-row__value {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111;
+  word-break: break-all;
+}
+
+.bank-details-copy-btn {
+  flex-shrink: 0;
+  border: none;
+  background: #000;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.bank-details-copy-btn:hover {
+  background: #ec4b3c;
+}
+
+.bank-details-note {
+  margin-top: 24px;
+  font-size: 13px;
+  color: #555;
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 12px 14px;
+  line-height: 1.5;
+}
+
+/* ---------------- Responsive ---------------- */
+
+@media (max-width: 640px) {
+  .bank-details-page {
+    padding: 24px 12px;
+    align-items: stretch;
+  }
+
+  .bank-details-card {
+    max-width: 100%;
+    padding: 24px 16px;
+    border-radius: 10px;
+  }
+
+  .bank-details-card__header h1 {
+    font-size: 19px;
+  }
+
+  .bank-details-card__header p {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 420px) {
+  .bank-details-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .bank-details-row__value {
+    font-size: 14px;
+  }
+
+  .bank-details-copy-btn {
+    width: 100%;
+    padding: 8px 0;
+  }
+
+  .bank-details-back-btn span {
+    font-size: 12px;
+  }
+}

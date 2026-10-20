@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import { getImageUrl, getFeaturedProducts, extractList } from "../services/api";
 import "../styles/Cart.css";
 
@@ -103,13 +101,15 @@ export default function Cart() {
     };
   }, []);
 
-  const handleAddToCart = async (e, productId) => {
+  const handleAddToCart = async (e, product) => {
     e.preventDefault();
     e.stopPropagation();
     if (addingId) return;
-    setAddingId(productId);
+    setAddingId(product.id);
     try {
-      await addToCart(productId, 1);
+      // Pass the full product object so guest carts don't end up with
+      // product: null (see CartContext.addToCart).
+      await addToCart(product.id, 1, product);
     } catch {
       // errors are already surfaced by CartContext
     } finally {
@@ -117,226 +117,225 @@ export default function Cart() {
     }
   };
 
+  // NOTE: cartItems coming from CartContext is already guaranteed to have
+  // a valid `product` on every row — CartContext.fetchCart() cleans out
+  // orphaned rows (deleted products / stale guest-cart entries) at the
+  // source, once, instead of this page having to filter and warn about
+  // them on every render. No extra filtering needed here.
+
   return (
-    <>
-      <Navbar />
+    <main className="cart-page">
+      <h1 className="cart-page__title">Your Cart</h1>
 
-      <main className="cart-page">
-        <h1 className="cart-page__title">Your Cart</h1>
+      {loading && <p className="cart-state">Loading your cart…</p>}
 
-        {loading && <p className="cart-state">Loading your cart…</p>}
+      {!loading && error && <p className="cart-state cart-state--error">{error}</p>}
 
-        {!loading && error && <p className="cart-state cart-state--error">{error}</p>}
+      {!loading && !error && cartItems.length === 0 && (
+        <div className="cart-empty">
+          <p>Your cart is empty.</p>
+          <Link to="/shop" className="cart-empty__link">
+            Start Shopping
+          </Link>
+        </div>
+      )}
 
-        {!loading && !error && cartItems.length === 0 && (
-          <div className="cart-empty">
-            <p>Your cart is empty.</p>
-            <Link to="/products" className="cart-empty__link">
-              Start Shopping
-            </Link>
-          </div>
-        )}
-
-        {!loading && !error && cartItems.length > 0 && (
-          <div className="cart-table-wrap">
-            <table className="cart-table">
-              <thead>
-                <tr>
-                  <th className="col-product">Product</th>
-                  <th className="col-price">Price</th>
-                  <th className="col-qty">Quantity</th>
-                  <th className="col-total">Total</th>
-                  <th className="col-action">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cartItems.map((item) => {
-                  const img = firstImage(item.product);
-                  return (
-                    <tr key={item.id}>
-                      <td className="col-product">
-                        <div className="cart-product">
-                          {img && (
-                            <img
-                              src={getImageUrl(img)}
-                              alt={item.product.name}
-                              className="cart-product__img"
-                            />
-                          )}
-                          <span className="cart-product__name">{item.product.name}</span>
-                        </div>
-                      </td>
-
-                      <td className="col-price">{formatPrice(item.price)}</td>
-
-                      <td className="col-qty">
-                        <div className="qty-stepper">
-                          <button
-                            type="button"
-                            className="qty-stepper__btn"
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            disabled={item.quantity <= 1}
-                            aria-label="Decrease quantity"
-                          >
-                            <MinusIcon />
-                          </button>
-                          <span className="qty-stepper__value">{item.quantity}</span>
-                          <button
-                            type="button"
-                            className="qty-stepper__btn"
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            aria-label="Increase quantity"
-                          >
-                            <PlusIcon />
-                          </button>
-                        </div>
-                      </td>
-
-                      <td className="col-total">
-                        {formatPrice(item.price * item.quantity)}
-                      </td>
-
-                      <td className="col-action">
-                        <button
-                          type="button"
-                          className="cart-remove-btn"
-                          onClick={() => removeItem(item.id)}
-                          aria-label={`Remove ${item.product.name}`}
-                        >
-                          <TrashIcon />
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-
-            <div className="cart-footer-row">
-              <Link to="/products" className="cart-continue-link">
-                Continue Shopping
-              </Link>
-
-              <div className="cart-footer-row__right">
-                <span className="cart-subtotal">
-                  Subtotal: <strong>{formatPrice(cartTotal)}</strong>
-                </span>
-                <button
-                  type="button"
-                  className="cart-checkout-btn"
-                  onClick={() => navigate("/checkout")}
-                >
-                  Check Out
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ---- Popular Products — right after the checkout row, before Footer ---- */}
-        <section className="popular-products">
-          <div className="popular-products__header">
-            <h2 className="popular-products__title">Popular Products</h2>
-            <p className="popular-products__subtitle">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-              tincidunt ut laoreet et dolore magna aliquam erat volutpat.
-            </p>
-          </div>
-
-          {popularError && (
-            <p className="popular-products__state popular-products__state--error">
-              {popularError}
-            </p>
-          )}
-
-          {!popularError && !popularLoading && popularProducts.length === 0 && (
-            <p className="popular-products__state">No featured products yet.</p>
-          )}
-
-          <div className="popular-products__grid">
-            {popularLoading
-              ? Array.from({ length: 4 }).map((_, i) => (
-                  <div className="pp-card pp-card--skeleton" key={i}>
-                    <div className="pp-card__img pp-card__img--placeholder" />
-                    <div className="pp-skeleton-line pp-skeleton-line--sm" />
-                    <div className="pp-skeleton-line" />
-                    <div className="pp-skeleton-line pp-skeleton-line--sm" />
-                  </div>
-                ))
-              : popularProducts.map((product) => {
-                  const img = firstImage(product);
-                  const hasSale =
-                    product.sale_price !== null &&
-                    product.sale_price !== undefined &&
-                    Number(product.sale_price) < Number(product.price);
-                  const rating = product.average_rating;
-
-                  return (
-                    <Link
-                      to={`/product/${product.slug}`}
-                      className="pp-card"
-                      key={product.id}
-                    >
-                      <div className="pp-card__img-wrap">
-                        {img ? (
+      {!loading && !error && cartItems.length > 0 && (
+        <div className="cart-table-wrap">
+          <table className="cart-table">
+            <thead>
+              <tr>
+                <th className="col-product">Product</th>
+                <th className="col-price">Price</th>
+                <th className="col-qty">Quantity</th>
+                <th className="col-total">Total</th>
+                <th className="col-action">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cartItems.map((item) => {
+                const img = firstImage(item.product);
+                return (
+                  <tr key={item.id}>
+                    <td className="col-product">
+                      <div className="cart-product">
+                        {img && (
                           <img
                             src={getImageUrl(img)}
-                            alt={product.name}
-                            className="pp-card__img"
-                            loading="lazy"
+                            alt={item.product.name}
+                            className="cart-product__img"
                           />
-                        ) : (
-                          <div className="pp-card__img pp-card__img--placeholder" />
                         )}
+                        <span className="cart-product__name">{item.product.name}</span>
+                      </div>
+                    </td>
 
+                    <td className="col-price">{formatPrice(item.price)}</td>
+
+                    <td className="col-qty">
+                      <div className="qty-stepper">
                         <button
                           type="button"
-                          className="pp-card__add-btn"
-                          onClick={(e) => handleAddToCart(e, product.id)}
-                          disabled={addingId === product.id}
+                          className="qty-stepper__btn"
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          disabled={item.quantity <= 1}
+                          aria-label="Decrease quantity"
                         >
-                          {addingId === product.id ? "Adding…" : "Add to Cart"}
+                          <MinusIcon />
+                        </button>
+                        <span className="qty-stepper__value">{item.quantity}</span>
+                        <button
+                          type="button"
+                          className="qty-stepper__btn"
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          aria-label="Increase quantity"
+                        >
+                          <PlusIcon />
                         </button>
                       </div>
+                    </td>
 
-                      {product.category?.name && (
-                        <span className="pp-card__category">{product.category.name}</span>
-                      )}
+                    <td className="col-total">
+                      {formatPrice(item.price * item.quantity)}
+                    </td>
 
-                      {rating ? (
-                        <div className="pp-card__stars" aria-label={`${rating} out of 5`}>
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <StarIcon key={i} filled={i < Math.round(rating)} />
-                          ))}
-                        </div>
-                      ) : null}
+                    <td className="col-action">
+                      <button
+                        type="button"
+                        className="cart-remove-btn"
+                        onClick={() => removeItem(item.id)}
+                        aria-label={`Remove ${item.product.name}`}
+                      >
+                        <TrashIcon />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
 
-                      <h3 className="pp-card__name">{product.name}</h3>
+          <div className="cart-footer-row">
+            <Link to="/products" className="cart-continue-link">
+              Continue Shopping
+            </Link>
 
-                      <div className="pp-card__price-row">
-                        {hasSale ? (
-                          <>
-                            <span className="pp-card__price pp-card__price--sale">
-                              {formatPrice(product.sale_price)}
-                            </span>
-                            <span className="pp-card__price pp-card__price--old">
-                              {formatPrice(product.price)}
-                            </span>
-                          </>
-                        ) : (
-                          <span className="pp-card__price">
-                            {formatPrice(product.price)}
-                          </span>
-                        )}
-                      </div>
-                    </Link>
-                  );
-                })}
+            <div className="cart-footer-row__right">
+              <span className="cart-subtotal">
+                Subtotal: <strong>{formatPrice(cartTotal)}</strong>
+              </span>
+              <button
+                type="button"
+                className="cart-checkout-btn"
+                onClick={() => navigate("/checkout")}
+              >
+                Check Out
+              </button>
+            </div>
           </div>
-        </section>
-      </main>
+        </div>
+      )}
 
-      <Footer />
-    </>
+      {/* ---- Popular Products — right after the checkout row ---- */}
+      <section className="popular-products">
+        <div className="popular-products__header">
+          <h2 className="popular-products__title">Popular Products</h2>
+          <p className="popular-products__subtitle">
+            Explore our most-loved products, trusted by our growing community for their reliability, style, and unbeatable customer satisfaction.
+          </p>
+        </div>
+
+        {popularError && (
+          <p className="popular-products__state popular-products__state--error">
+            {popularError}
+          </p>
+        )}
+
+        {!popularError && !popularLoading && popularProducts.length === 0 && (
+          <p className="popular-products__state">No featured products yet.</p>
+        )}
+
+        <div className="popular-products__grid">
+          {popularLoading
+            ? Array.from({ length: 4 }).map((_, i) => (
+              <div className="pp-card pp-card--skeleton" key={i}>
+                <div className="pp-card__img pp-card__img--placeholder" />
+                <div className="pp-skeleton-line pp-skeleton-line--sm" />
+                <div className="pp-skeleton-line" />
+                <div className="pp-skeleton-line pp-skeleton-line--sm" />
+              </div>
+            ))
+            : popularProducts.map((product) => {
+              const img = firstImage(product);
+              const hasSale =
+                product.sale_price !== null &&
+                product.sale_price !== undefined &&
+                Number(product.sale_price) < Number(product.price);
+              const rating = product.average_rating;
+
+              return (
+                <Link
+                  to={`/product/${product.slug}`}
+                  className="pp-card"
+                  key={product.id}
+                >
+                  <div className="pp-card__img-wrap">
+                    {img ? (
+                      <img
+                        src={getImageUrl(img)}
+                        alt={product.name}
+                        className="pp-card__img"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="pp-card__img pp-card__img--placeholder" />
+                    )}
+
+                    <button
+                      type="button"
+                      className="pp-card__add-btn"
+                      onClick={(e) => handleAddToCart(e, product)}
+                      disabled={addingId === product.id}
+                    >
+                      {addingId === product.id ? "Adding…" : "Add to Cart"}
+                    </button>
+                  </div>
+
+                  {product.category?.name && (
+                    <span className="pp-card__category">{product.category.name}</span>
+                  )}
+
+                  {rating ? (
+                    <div className="pp-card__stars" aria-label={`${rating} out of 5`}>
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <StarIcon key={i} filled={i < Math.round(rating)} />
+                      ))}
+                    </div>
+                  ) : null}
+
+                  <h3 className="pp-card__name">{product.name}</h3>
+
+                  <div className="pp-card__price-row">
+                    {hasSale ? (
+                      <>
+                        <span className="pp-card__price pp-card__price--sale">
+                          {formatPrice(product.sale_price)}
+                        </span>
+                        <span className="pp-card__price pp-card__price--old">
+                          {formatPrice(product.price)}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="pp-card__price">
+                        {formatPrice(product.price)}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
+        </div>
+      </section>
+    </main>
   );
 }

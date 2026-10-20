@@ -142,6 +142,7 @@
   border: 1px solid #f0f0f0;
   border-radius: 10px;
   padding: 28px;
+  min-width: 0; /* prevents grid child from overflowing on narrow screens */
 }
 
 .pd-top {
@@ -179,9 +180,32 @@
   background: #eee;
 }
 
+/* Auto-slide zoom/fade — re-triggers every time the `key` (active image)
+   changes, giving each new picture a gentle "Ken Burns" style entrance. */
+.pd-gallery__zoom {
+  animation: pd-zoom-fade 3s ease-in-out;
+  will-change: transform, opacity;
+}
+
+@keyframes pd-zoom-fade {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
 .pd-gallery__thumbs {
   display: flex;
   gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
 }
 
 .pd-gallery__thumb {
@@ -227,6 +251,7 @@
   align-items: center;
   gap: 4px;
   margin-bottom: 18px;
+  flex-wrap: wrap;
 }
 
 .pd-info__review-count {
@@ -244,6 +269,7 @@
   gap: 8px;
   font-size: 13px;
   padding: 4px 0;
+  flex-wrap: wrap;
 }
 
 .pd-specs__row dt {
@@ -263,6 +289,7 @@
   align-items: baseline;
   gap: 10px;
   margin-bottom: 18px;
+  flex-wrap: wrap;
 }
 
 .pd-price {
@@ -283,6 +310,7 @@
   align-items: center;
   gap: 12px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .pd-size-row__label {
@@ -395,6 +423,7 @@
   background: #fff;
   cursor: pointer;
   transition: border-color 0.15s ease;
+  flex-shrink: 0;
 }
 
 .pd-icon-btn:hover {
@@ -414,6 +443,7 @@
   gap: 28px;
   border-bottom: 1px solid #f0f0f0;
   margin-bottom: 20px;
+  overflow-x: auto;
 }
 
 .pd-tabs__btn {
@@ -426,6 +456,7 @@
   cursor: pointer;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
+  white-space: nowrap;
 }
 
 .pd-tabs__btn.is-active {
@@ -442,6 +473,8 @@
 .pd-info-table {
   width: 100%;
   border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
 }
 
 .pd-info-table td {
@@ -496,6 +529,7 @@
   font-family: inherit;
   resize: vertical;
   margin-bottom: 12px;
+  box-sizing: border-box;
 }
 
 .pd-review-form__error {
@@ -580,6 +614,14 @@
 
 /* ---------------- Responsive ---------------- */
 
+/* Tablet: sidebar moves above main content, stays full width */
+@media (max-width: 1024px) {
+  .pd-layout {
+    grid-template-columns: 220px 1fr;
+    gap: 24px;
+  }
+}
+
 @media (max-width: 900px) {
   .pd-layout {
     grid-template-columns: 1fr;
@@ -587,15 +629,101 @@
 
   .pd-top {
     grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .pd-sidebar {
+    order: 2;
+  }
+
+  .pd-main {
+    order: 1;
+    padding: 22px;
+  }
+
+  .pd-gallery__main {
+    min-height: 260px;
   }
 }
 
-@media (max-width: 480px) {
+/* Small tablets / large phones */
+@media (max-width: 640px) {
   .pd-page {
-    padding: 20px 16px 56px;
+    padding: 24px 16px 64px;
   }
 
   .pd-main {
     padding: 18px;
+    border-radius: 8px;
+  }
+
+  .pd-info__title {
+    font-size: 19px;
+  }
+
+  .pd-price {
+    font-size: 20px;
+  }
+
+  .pd-action-row {
+    gap: 10px;
+  }
+
+  .pd-add-btn {
+    flex: 1 1 auto;
+    padding: 12px 20px;
+  }
+
+  .pd-tabs__nav {
+    gap: 18px;
+  }
+}
+
+/* Phones */
+@media (max-width: 480px) {
+  .pd-page {
+    padding: 20px 12px 56px;
+  }
+
+  .pd-main {
+    padding: 16px;
+  }
+
+  .pd-sidebar {
+    padding: 16px;
+  }
+
+  .pd-gallery__main {
+    min-height: 220px;
+  }
+
+  .pd-gallery__thumb {
+    width: 52px;
+    height: 52px;
+  }
+
+  .pd-specs__row dt {
+    width: 90px;
+  }
+
+  .pd-action-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .qty-stepper {
+    justify-content: center;
+  }
+
+  .pd-add-btn {
+    width: 100%;
+  }
+
+  .pd-icon-btn {
+    width: 100%;
+  }
+
+  .pd-info-table td:first-child {
+    width: 140px;
   }
 }

@@ -4,6 +4,7 @@ import {
   getFooterGallery,
   getCategories,
   extractList,
+  getImageUrl,
 } from "../services/api";
 
 import { Link } from "react-router-dom";
@@ -21,16 +22,12 @@ import {
 import "../styles/Footer.css";
 import logo from "../assets/logo.jpeg";
 
-// Backend base URL (bina /api ke) — images isi se serve hongi
-const STORAGE_BASE_URL = "http://localhost/Laravel/bzack-backend/public/";
-
 const companyLinks = [
   { label: "About Us", to: "/about" },
-  { label: "Delivery Information", to: "/contact" },
   { label: "Privacy Policy", to: "/privacy-policy" },
-  { label: "Terms & Conditions", to: "/terms" },
+  { label: "Return & Refund Policy", to: "/return-refund-policy" },
+  { label: "Shipping & Delivery Policy", to: "/shipping-delivery-policy" },
   { label: "Contact Us", to: "/contact" },
-  { label: "Support Center", to: "/contact" },
 ];
 
 const Footer = () => {
@@ -115,7 +112,7 @@ const Footer = () => {
             </p>
             <div className="bzak-footer-contact">
               <p>
-                <FaMapMarkerAlt />Street No. 15, House No.14 New Multan.
+                <FaMapMarkerAlt />Multan,Pakistan.
               </p>
               <p>
                 <FaEnvelope /> Bzakapparel@gmail.com
@@ -179,7 +176,7 @@ const Footer = () => {
             </form>
 
             <div className="bzak-footer-social">
-              <a href="https://facebook.com" target="_blank" rel="noreferrer">
+              <a href="https://www.facebook.com/profile.php?id=61590549217439" target="_blank" rel="noreferrer">
                 <FaFacebookF />
               </a>
               <a href="https://twitter.com" target="_blank" rel="noreferrer">
@@ -198,12 +195,12 @@ const Footer = () => {
                 galleryImages.map((img) => (
                   <img
                     key={img.id}
-                    src={`${STORAGE_BASE_URL}${img.image}`}
+                    src={getImageUrl(img.image)}
                     alt={`Bzak gallery ${img.id}`}
                     loading="lazy"
                     className="bzak-gallery-img"
                     onClick={() =>
-                      setLightboxImage(`${STORAGE_BASE_URL}${img.image}`)
+                      setLightboxImage(getImageUrl(img.image))
                     }
                   />
                 ))}

@@ -23,9 +23,14 @@ export function WishlistProvider({ children }) {
         if (item?.product?.id) map[item.product.id] = item.id;
       });
       setWishlistMap(map);
-    } catch {
-      // logged in but request failed — leave map as-is
-    }
+    } catch (err) {
+  if (err?.response?.status === 401) {
+    setWishlistMap({});
+    return;
+  }
+
+  console.error("Failed to refresh wishlist:", err);
+}
   }, []);
 
   useEffect(() => {

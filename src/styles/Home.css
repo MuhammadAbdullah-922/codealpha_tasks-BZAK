@@ -107,6 +107,10 @@ img {
   font-weight: 600;
   cursor: pointer;
   font-size: 0.9rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background 0.2s ease, color 0.2s ease;
+  display: inline-block;
 }
 .bzak-tabs span:first-child {
   margin-left: 0;
@@ -114,12 +118,15 @@ img {
 .bzak-tabs span.active {
   color: #2ea043;
 }
+.bzak-tabs span:hover {
+  background: #ec4b3c;
+  color: #fff;
+}
 
 /* Promo card */
 .bzak-promo-card {
-  background: #2e2a22 url("../assets/pic3.jpeg") center/cover;
+  background: #2e2a22 url("../assets/pic56.jpeg") center 30% / cover;
   border-radius: 10px;
-  height: 100%;
   min-height: 320px;
   color: #fff;
   padding: 28px;
@@ -387,9 +394,9 @@ img {
 .bzak-deal-card img,
 .bzak-deal-card .bzak-img-placeholder {
   width: 100%;
-  height: 160px;
+  height: 320px;               /* height kaafi barha di */
   object-fit: cover;
-  object-position: top;
+  object-position: top center;
   background: #f0f0f0;
   border-radius: 0;
 }
@@ -418,12 +425,6 @@ img {
 }
 
 /* Why choose us */
-.bzak-why-img {
-  width: 100%;
-  min-height: 340px;
-  border-radius: 12px;
-  object-fit: cover;
-}
 .bzak-why-item {
   margin-bottom: 22px;
   padding-left: 4px;
@@ -481,16 +482,75 @@ img {
   padding: 36px 0;
   border-top: 1px solid #eee;
 }
+
+/* Override Bootstrap's uneven auto-width columns (col-lg without a
+   number) with a CSS grid of 5 EQUAL columns + one fixed gap value.
+   This is what actually makes every item's spacing identical,
+   regardless of whether its text wraps to one line or two. */
+.bzak-features .row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 28px;
+}
+.bzak-features .row > [class*="col-"] {
+  width: auto;
+  max-width: none;
+  flex: none;
+  padding: 0;
+}
+
 .bzak-feature-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  justify-content: center;
+  gap: 8px;
+  justify-content: flex-start;
+  height: 100%;
 }
+
+/* Desktop only: tight, consistent icon-text gap matching the COD
+   item's look, applied to ALL items so nothing looks farther apart
+   than the rest. Mobile/tablet stay at 8px since this only applies
+   at 992px and above. */
+@media (min-width: 992px) {
+  .bzak-feature-item {
+    gap: 6px;
+  }
+}
+
+/* Icon circle wrapper — fixed size so every icon (tags, truck, gift,
+   box, undo) sits inside an identical circle on both desktop and
+   mobile. This is what actually keeps the truck icon from looking
+   stretched: the wrapper is a fixed square + flex-centered, and the
+   SVG itself is also force-sized below regardless of its own
+   viewBox/width/height attributes (FaTruck's viewBox is 640x512,
+   non-square, unlike the other icons' 512x512 viewBox). */
 .bzak-feature-icon {
-  font-size: 1.6rem;
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  border-radius: 50%;
+  background: #fdece9;
   color: #ec4b3c;
+  font-size: 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
+
+/* Force every icon's SVG to the same square size — overrides
+   react-icons' own inline width/height (e.g. FaTruck renders as
+   width="13em" by default because of its wide viewBox). Works the
+   same on desktop and mobile since it's a fixed size, not tied to
+   a breakpoint. */
+.bzak-feature-icon svg {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  max-width: 1.5rem !important;
+  max-height: 1.5rem !important;
+  flex-shrink: 0;
+}
+
 .bzak-feature-item h6 {
   font-weight: 700;
   margin-bottom: 2px;
@@ -513,59 +573,52 @@ img {
   .bzak-feature-item {
     justify-content: flex-start;
   }
+  .bzak-features .row {
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 24px;
+  }
 }
 @media (max-width: 575.98px) {
   .bzak-newsletter-form {
     flex-direction: column;
+    align-items: stretch;
     max-width: 100%;
+    width: 100%;
+  }
+  .bzak-feature-item p {
+    font-size: 0.70rem;
   }
   .bzak-newsletter-form input,
   .bzak-newsletter-form button {
     border-radius: 6px;
     width: 100%;
+    flex: none;      /* stops the row's flex:1 from breaking column layout */
     height: 46px;
   }
   .bzak-newsletter-form input {
     margin-bottom: 10px;
   }
+
+  .bzak-features .row {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 20px;
+    gap: 16px;
+  }
+
+  /* Slightly smaller icon circle on very small screens so the
+     feature strip stays compact on mobile */
+  .bzak-feature-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+  }
+  .bzak-feature-icon svg {
+    width: 1.3rem !important;
+    height: 1.3rem !important;
+    max-width: 1.3rem !important;
+    max-height: 1.3rem !important;
+  }
 }
-/*
-  In your existing src/styles/Home.css, FIND this existing block:
-
-    .bzak-why-img {
-      width: 100%;
-      min-height: 340px;
-      border-radius: 12px;
-      object-fit: cover;
-    }
-
-  and REPLACE it with this:
-*/
-
-/*
-  In your existing src/styles/Home.css, FIND this existing block:
-
-    .bzak-why-img {
-      width: 100%;
-      min-height: 340px;
-      border-radius: 12px;
-      object-fit: cover;
-    }
-
-  and REPLACE it with this:
-*/
-/*
-  In your existing src/styles/Home.css, FIND this existing block:
-
-    .bzak-why-img {
-      width: 100%;
-      min-height: 340px;
-      border-radius: 12px;
-      object-fit: cover;
-    }
-
-  and REPLACE it with this:
-*/
 
 .bzak-why-img-link {
   display: block;
@@ -640,5 +693,44 @@ a {
     right: 16px;
     top: 70px;
     text-align: center;
+  }
+}
+@media (max-width: 767.98px) {
+  /* Global fix: symmetric left/right spacing for every row inside
+     any .bzak-section on this page (categories, best sellers,
+     featured styles, deals, why-choose-us, etc.) */
+  .bzak-section .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .bzak-section .row > [class*="col-"] {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  /* Make sure every card type sits centered and full-width inside
+     its column, so nothing drifts left or right */
+  .bzak-cat-card,
+  .bzak-product-card,
+  .bzak-dish-card,
+  .bzak-deal-card,
+  .bzak-promo-card {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Disabled state for the Featured Styles slider arrows */
+.bzak-slider-nav button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+@media (max-width: 575.98px) {
+  /* ... existing rules ... */
+
+  .bzak-deal-add {
+    padding: 6px 8px;
   }
 }

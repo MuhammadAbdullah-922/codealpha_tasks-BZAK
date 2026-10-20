@@ -80,6 +80,9 @@ const Shop = () => {
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get("search") || "";
   const categorySlug = searchParams.get("category") || "";
+  // NEW: colors selected from the Product Details sidebar filter, passed
+  // through as ?color=Red,Blue — straight through to the backend.
+  const colorParam = searchParams.get("color") || "";
 
   const [sort, setSort] = useState("popular");
   const [products, setProducts] = useState([]);
@@ -104,6 +107,7 @@ const Shop = () => {
       ...sortParams(sort),
       ...(searchTerm ? { search: searchTerm } : {}),
       ...(categorySlug ? { category: categorySlug } : {}),
+      ...(colorParam ? { color: colorParam } : {}),
     };
 
     getProducts(params)
@@ -117,7 +121,7 @@ const Shop = () => {
     return () => {
       isMounted = false;
     };
-  }, [sort, searchTerm, categorySlug]);
+  }, [sort, searchTerm, categorySlug, colorParam]);
 
   // Naya category select hote hi user ko page ke top par le aayein,
   // taake footer se click karne par woh turant naya result dekh sake.
@@ -125,27 +129,24 @@ const Shop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [categorySlug]);
 
-  const handleAddToCart = async (productId) => {
-    if (!productId) return;
+const handleAddToCart = async (product) => {
+  if (!product?.id) return;
 
-    const token = localStorage.getItem("token");
+  setAddingId(product.id);
 
-    if (!token) {
-      window.location.href = "/login";
-      return;
-    }
+  try {
+    await addToCart(product.id, 1, product);
 
-    setAddingId(productId);
+    // Product successfully added → Cart page
+    navigate("/cart");
+  } catch (err) {
+    console.error("Add to cart error:", err);
 
-    try {
-      await addToCart(productId, 1);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setAddingId(null);
-    }
-  };
-
+    showToast("Unable to add product to cart", "error");
+  } finally {
+    setAddingId(null);
+  }
+};
   // ---------- Wishlist toggle (via shared context) ----------
   const handleToggleWishlist = async (product) => {
     if (!product?.id) return;
@@ -282,7 +283,7 @@ const Shop = () => {
                       </div>
                       <button
                         className="bzak-shop-add"
-                        onClick={() => handleAddToCart(p.id)}
+                      onClick={() => handleAddToCart(p)}
                         disabled={addingId === p.id}
                       >
                         <FaShoppingCart className="me-2" />

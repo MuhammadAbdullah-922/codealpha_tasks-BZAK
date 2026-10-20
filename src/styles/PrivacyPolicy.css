@@ -1,0 +1,167 @@
+/* ================= Privacy Policy Page ================= */
+/* Uses the same font/color system as About.css, Navbar.css & Footer.css */
+
+.bzak-privacy {
+  padding: 70px 0 80px;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+}
+
+.bzak-privacy-updated {
+  color: #999;
+  font-size: 0.85rem;
+  margin-bottom: 18px;
+}
+
+.bzak-privacy-intro {
+  color: #666;
+  font-size: 0.98rem;
+  line-height: 1.75;
+  max-width: 780px;
+  margin-bottom: 40px;
+}
+
+/* ---------- Section cards ---------- */
+.bzak-privacy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.bzak-privacy-card {
+  display: flex;
+  gap: 24px;
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 28px 32px;
+}
+
+.bzak-privacy-num {
+  flex-shrink: 0;
+  color: #ec4b3c;
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.bzak-privacy-card-body {
+  flex: 1;
+}
+
+.bzak-privacy-card-body h5 {
+  color: #222;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.bzak-privacy-card-body p {
+  color: #666;
+  font-size: 0.92rem;
+  line-height: 1.75;
+  margin-bottom: 12px;
+}
+
+.bzak-privacy-card-body p:last-child {
+  margin-bottom: 0;
+}
+
+.bzak-privacy-card-body ul {
+  margin: 0 0 12px;
+  padding-left: 20px;
+  color: #666;
+}
+
+.bzak-privacy-card-body ul:last-child {
+  margin-bottom: 0;
+}
+
+.bzak-privacy-card-body li {
+  font-size: 0.92rem;
+  line-height: 1.7;
+  margin-bottom: 6px;
+}
+
+.bzak-privacy-card-body li:last-child {
+  margin-bottom: 0;
+}
+
+.bzak-privacy-card-body strong {
+  color: #222;
+}
+
+/* ---------- Contact block ---------- */
+.bzak-privacy-contact {
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 32px;
+  margin-top: 8px;
+}
+
+.bzak-privacy-contact h5 {
+  color: #222;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.bzak-privacy-contact p {
+  color: #666;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+
+.bzak-privacy-contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.bzak-privacy-contact-links a {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 22px;
+  border-radius: 6px;
+  background: #ec4b3c;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.25s ease;
+}
+
+.bzak-privacy-contact-links a:hover {
+  background: #000;
+  color: #fff;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 767.98px) {
+  .bzak-privacy {
+    padding: 40px 0 24px;
+  }
+
+  .bzak-privacy-card {
+    flex-direction: column;
+    gap: 8px;
+    padding: 22px 20px;
+  }
+
+  .bzak-privacy-contact {
+    padding: 24px 20px;
+  }
+
+  .bzak-privacy-contact-links {
+    flex-direction: column;
+  }
+
+  .bzak-privacy-contact-links a {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .bzak-privacy-card-body h5 {
+    font-size: 1rem;
+  }
+}

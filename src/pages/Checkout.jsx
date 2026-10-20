@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import BankPaymentModal from "../components/BankPaymentModal";
 import {
   getImageUrl,
   getProfile,
@@ -39,38 +39,47 @@ const formatPrice = (value) =>
 
 // Placeholder delivery rates — wire these to real shipping rules once
 // the backend defines them; kept simple and explicit for now.
-const DELIVERY_RATES = {
-  free: 0,
-  flat: 200,
-};
+const DELIVERY_CHARGE = 300;
 
 export default function Checkout() {
   const navigate = useNavigate();
   const { cartItems, cartTotal, loading: cartLoading } = useCart();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
-  const [customerMode, setCustomerMode] = useState("register"); // 'register' | 'guest'
-  const [guestContinued, setGuestContinued] = useState(false);
+  // NOTE: cartItems from CartContext is already guaranteed to have a
+  // valid `product` on every row (CartContext.fetchCart() cleans out
+  // orphaned rows at the source), so no filtering is needed here.
 
+  // Authentication
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    !!localStorage.getItem("token")
+  );
+
+  // Login
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState(null);
 
-  const [deliveryMethod, setDeliveryMethod] = useState("free");
+  // Payment
   const [paymentMethod, setPaymentMethod] = useState("cod");
- 
+
   const [comments, setComments] = useState("");
   const [transactionId, setTransactionId] = useState("");
   const [senderNumber, setSenderNumber] = useState("");
-  // Bank Transfer reference — now a fully controlled field like the others.
   const [bankReference, setBankReference] = useState("");
-  // Payment screenshot for JazzCash/EasyPaisa/Bank — uploaded in a
-  // separate request right after the order is created.
+
+  // Payment proof (screenshot) is only collected for JazzCash / EasyPaisa.
+  // Bank Transfer relies on the transaction reference only — no screenshot
+  // upload for that method, per the account-security note below.
   const [proofFile, setProofFile] = useState(null);
   const [proofPreview, setProofPreview] = useState(null);
   const [uploadingProof, setUploadingProof] = useState(false);
 
+  // Inline "Scan & Pay" modal for Bank Transfer — opens on top of this
+  // page instead of navigating to a separate details page.
+  const [bankModalOpen, setBankModalOpen] = useState(false);
+
+  // Billing
   const [billing, setBilling] = useState({
     firstName: "",
     lastName: "",
@@ -129,10 +138,9 @@ export default function Checkout() {
     }
   };
 
-  const deliveryCharge = DELIVERY_RATES[deliveryMethod] ?? 0;
-  const totalAmount = cartTotal + deliveryCharge;
+  const totalAmount = cartTotal + DELIVERY_CHARGE;
 
-  const canFillBilling = isLoggedIn || guestContinued;
+  const canFillBilling = true;
 
   const handleBillingChange = (field) => (e) =>
     setBilling((b) => ({ ...b, [field]: e.target.value }));
@@ -189,11 +197,11 @@ export default function Checkout() {
   const handlePlaceOrder = async () => {
     if (placing) return;
 
-    if (!isLoggedIn) {
+    if (cartItems.length === 0) {
       showAlert(
         "warning",
-        "Login Required",
-        "Guest checkout isn't available yet — please log in or create an account to place your order."
+        "Cart Issue",
+        "Your cart is empty. Please add items before placing the order."
       );
       return;
     }
@@ -224,7 +232,12 @@ export default function Checkout() {
       showAlert("warning", "Missing Payment Details", "Please enter your bank transaction reference.");
       return;
     }
-    if (paymentMethod !== "cod" && !proofFile) {
+    // Screenshot proof only applies to JazzCash / EasyPaisa — Bank
+    // Transfer is verified from the transaction reference instead.
+    if (
+      (paymentMethod === "jazzcash" || paymentMethod === "easypaisa") &&
+      !proofFile
+    ) {
       showAlert("warning", "Screenshot Required", "Please upload a screenshot of your payment.");
       return;
     }
@@ -251,7 +264,7 @@ export default function Checkout() {
         transaction_id: paymentMethod === "bank" ? bankReference : transactionId,
         sender_number: senderNumber,
         bank_reference: bankReference,
-        shipping: deliveryCharge,
+        shipping: DELIVERY_CHARGE,
         shipping_address: addressParts.join(", "),
         shipping_city: billing.city,
         shipping_phone: billing.phone,
@@ -278,7 +291,16 @@ export default function Checkout() {
         }
       }
 
-      await clearCart();
+      // Clear cart only when the user is authenticated.
+      // Guest checkout does not have permission to use DELETE /cart.
+      if (isLoggedIn) {
+        try {
+          await clearCart();
+        } catch (cartError) {
+          // Cart cleanup failure must NOT make a successfully-created order fail.
+          console.warn("Cart could not be cleared:", cartError);
+        }
+      }
 
       await Swal.fire({
         icon: "success",
@@ -306,7 +328,6 @@ export default function Checkout() {
         <main className="checkout-page">
           <p className="checkout-state">Loading your cart…</p>
         </main>
-        <Footer />
       </>
     );
   }
@@ -331,7 +352,6 @@ export default function Checkout() {
             </Link>
           </div>
         </main>
-        <Footer />
       </>
     );
   }
@@ -362,7 +382,7 @@ export default function Checkout() {
               </div>
               <div className="checkout-summary-row">
                 <span>Delivery Charges</span>
-                <span>{formatPrice(deliveryCharge)}</span>
+                <span>{formatPrice(DELIVERY_CHARGE)}</span>
               </div>
               <div className="checkout-summary-row checkout-summary-row--total">
                 <span>Total Amount</span>
@@ -394,36 +414,11 @@ export default function Checkout() {
             </div>
 
             <div className="checkout-card">
-              <h3 className="checkout-card__title">Delivery Method</h3>
-              <p className="checkout-card__hint">
-                Please select the preferred shipping method to use on this order.
-              </p>
+              <h3 className="checkout-card__title">Delivery</h3>
 
-              <div className="checkout-radio-row">
-                <label className="checkout-radio">
-                  <input
-                    type="radio"
-                    name="delivery"
-                    checked={deliveryMethod === "free"}
-                    onChange={() => setDeliveryMethod("free")}
-                  />
-                  <span>
-                    Free Shipping
-                    <small>Rate - Rs 0</small>
-                  </span>
-                </label>
-                <label className="checkout-radio">
-                  <input
-                    type="radio"
-                    name="delivery"
-                    checked={deliveryMethod === "flat"}
-                    onChange={() => setDeliveryMethod("flat")}
-                  />
-                  <span>
-                    Flat Rate
-                    <small>Rate - Rs 200</small>
-                  </span>
-                </label>
+              <div className="delivery-charge">
+                <span>Delivery Charges</span>
+                <strong>Rs: 300/-</strong>
               </div>
 
               <label className="checkout-field">
@@ -498,7 +493,7 @@ export default function Checkout() {
                   <h4>JazzCash Payment</h4>
 
                   <p>
-                    <strong>Account Name:</strong> BZAK Store
+                    <strong>Account Name:</strong> Muhammad Arslan Khursheed
                   </p>
                   <p>
                     <strong>Mobile:</strong> 0300-1234567
@@ -518,27 +513,11 @@ export default function Checkout() {
                     <span>Sender Mobile Number*</span>
                     <input
                       type="tel"
-                      placeholder="e.g. 03001234567"
+                      placeholder="e.g. Enter the sender's number here..."
                       value={senderNumber}
                       onChange={(e) => setSenderNumber(e.target.value)}
                     />
                   </label>
-
-                  <label className="checkout-field" style={{ marginTop: 4 }}>
-                    <span>Upload Payment Screenshot*</span>
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      onChange={handleProofFileChange}
-                    />
-                  </label>
-                  {proofPreview && paymentMethod === "jazzcash" && (
-                    <img
-                      src={proofPreview}
-                      alt="Payment proof preview"
-                      style={{ maxWidth: 160, borderRadius: 6, marginTop: 8 }}
-                    />
-                  )}
 
                   <small>Your payment will be verified before processing the order.</small>
                 </div>
@@ -550,7 +529,7 @@ export default function Checkout() {
                   <h4>EasyPaisa Payment</h4>
 
                   <p>
-                    <strong>Account Name:</strong> BZAK Store
+                    <strong>Account Name:</strong> Muhammad Arslan Khursheed
                   </p>
                   <p>
                     <strong>Mobile:</strong> 0311-1234567
@@ -570,74 +549,38 @@ export default function Checkout() {
                     <span>Sender Mobile Number*</span>
                     <input
                       type="tel"
-                      placeholder="e.g. 03111234567"
+                      placeholder="e.g. Enter the sender's number here..."
                       value={senderNumber}
                       onChange={(e) => setSenderNumber(e.target.value)}
                     />
                   </label>
 
-                  <label className="checkout-field" style={{ marginTop: 4 }}>
-                    <span>Upload Payment Screenshot*</span>
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      onChange={handleProofFileChange}
-                    />
-                  </label>
-                  {proofPreview && paymentMethod === "easypaisa" && (
-                    <img
-                      src={proofPreview}
-                      alt="Payment proof preview"
-                      style={{ maxWidth: 160, borderRadius: 6, marginTop: 8 }}
-                    />
-                  )}
-
                   <small>Your payment will be verified before processing the order.</small>
                 </div>
               )}
 
-              {/* Bank Transfer */}
+              {/* Bank Transfer — inline Scan & Pay modal, no page navigation */}
               {paymentMethod === "bank" && (
-                <div className="payment-box">
+                <div className="payment-box bank-payment-box">
                   <h4>Bank Transfer</h4>
-
-                  <p>
-                    <strong>Bank:</strong> Meezan Bank
-                  </p>
-                  <p>
-                    <strong>Account Title:</strong> BZAK Store
-                  </p>
-                  <p>
-                    <strong>IBAN:</strong> PK00MEZN0000000000000000
+                  <p className="payment-instruction">
+                    Pay directly via Meezan Bank Scan & Pay — no manual
+                    details to type.
                   </p>
 
-                  <label className="checkout-field">
-                    <span>Transaction Reference*</span>
-                    <input
-                      type="text"
-                      placeholder="e.g. Bank receipt / reference no."
-                      value={bankReference}
-                      onChange={(e) => setBankReference(e.target.value)}
-                    />
-                  </label>
+                  <button
+                    type="button"
+                    className="checkout-btn"
+                    onClick={() => setBankModalOpen(true)}
+                  >
+                    Scan & Pay Now
+                  </button>
 
-                  <label className="checkout-field" style={{ marginTop: 4 }}>
-                    <span>Upload Payment Screenshot*</span>
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      onChange={handleProofFileChange}
-                    />
-                  </label>
-                  {proofPreview && paymentMethod === "bank" && (
-                    <img
-                      src={proofPreview}
-                      alt="Payment proof preview"
-                      style={{ maxWidth: 160, borderRadius: 6, marginTop: 8 }}
-                    />
+                  {bankReference && (
+                    <small style={{ display: "block", marginTop: 10 }}>
+                      Reference on file: <strong>{bankReference}</strong>
+                    </small>
                   )}
-
-                  <small>After payment, upload your screenshot and enter the reference above.</small>
                 </div>
               )}
             </div>
@@ -645,93 +588,6 @@ export default function Checkout() {
 
           {/* ---------------- Right column ---------------- */}
           <div className="checkout-col">
-            {!isLoggedIn && !guestContinued && (
-              <>
-                <div className="checkout-card">
-                  <h3 className="checkout-card__title">New Customer</h3>
-                  <p className="checkout-card__label">Checkout Options</p>
-
-                  <div className="checkout-radio-row">
-                    <label className="checkout-radio">
-                      <input
-                        type="radio"
-                        name="customerMode"
-                        checked={customerMode === "register"}
-                        onChange={() => setCustomerMode("register")}
-                      />
-                      <span>Register Account</span>
-                    </label>
-                    <label className="checkout-radio">
-                      <input
-                        type="radio"
-                        name="customerMode"
-                        checked={customerMode === "guest"}
-                        onChange={() => setCustomerMode("guest")}
-                      />
-                      <span>Guest Account</span>
-                    </label>
-                  </div>
-
-                  <p className="checkout-card__hint">
-                    By creating an account you will be able to shop faster, be up to
-                    date on an order's status, and keep track of the orders you have
-                    previously made.
-                  </p>
-
-                  <button
-                    type="button"
-                    className="checkout-btn"
-                    onClick={() => {
-                      if (customerMode === "register") {
-                        navigate("/register");
-                      } else {
-                        setGuestContinued(true);
-                      }
-                    }}
-                  >
-                    Continue
-                  </button>
-                </div>
-
-                <div className="checkout-card">
-                  <h3 className="checkout-card__title">Returning Customer</h3>
-                  <form onSubmit={handleLogin}>
-                    <label className="checkout-field">
-                      <span>Email Address</span>
-                      <input
-                        type="email"
-                        placeholder="Enter your email address"
-                        value={loginEmail}
-                        onChange={(e) => setLoginEmail(e.target.value)}
-                        required
-                      />
-                    </label>
-                    <label className="checkout-field">
-                      <span>Password</span>
-                      <input
-                        type="password"
-                        placeholder="Enter your password"
-                        value={loginPassword}
-                        onChange={(e) => setLoginPassword(e.target.value)}
-                        required
-                      />
-                    </label>
-
-                    {loginError && <p className="checkout-error">{loginError}</p>}
-
-                    <div className="checkout-login-row">
-                      <button type="submit" className="checkout-btn" disabled={loginLoading}>
-                        {loginLoading ? "Logging in…" : "Login"}
-                      </button>
-                      <Link to="/forgot-password" className="checkout-link">
-                        Forgot Password?
-                      </Link>
-                    </div>
-                  </form>
-                </div>
-              </>
-            )}
-
             {canFillBilling && (
               <div className="checkout-card">
                 <h3 className="checkout-card__title">Billing Details</h3>
@@ -835,11 +691,60 @@ export default function Checkout() {
                 </button>
               </div>
             )}
+
+            {!isLoggedIn && (
+              <div className="checkout-card">
+                <h3 className="checkout-card__title">Returning Customer</h3>
+                <form onSubmit={handleLogin}>
+                  <label className="checkout-field">
+                    <span>Email Address</span>
+                    <input
+                      type="email"
+                      placeholder="Enter your email address"
+                      value={loginEmail}
+                      onChange={(e) => setLoginEmail(e.target.value)}
+                      required
+                    />
+                  </label>
+                  <label className="checkout-field">
+                    <span>Password</span>
+                    <input
+                      type="password"
+                      placeholder="Enter your password"
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                      required
+                    />
+                  </label>
+
+                  {loginError && <p className="checkout-error">{loginError}</p>}
+
+                  <div className="checkout-login-row">
+                    <button type="submit" className="checkout-btn" disabled={loginLoading}>
+                      {loginLoading ? "Logging in…" : "Login"}
+                    </button>
+                    <Link to="/forgot-password" className="checkout-link">
+                      Forgot Password?
+                    </Link>
+                  </div>
+                </form>
+              </div>
+            )}
           </div>
         </div>
       </main>
 
-      <Footer />
+      <BankPaymentModal
+        open={bankModalOpen}
+        onClose={() => setBankModalOpen(false)}
+        reference={bankReference}
+        onReferenceChange={setBankReference}
+        confirming={placing}
+        onConfirm={async () => {
+          await handlePlaceOrder();
+          setBankModalOpen(false);
+        }}
+      />
     </>
   );
 }

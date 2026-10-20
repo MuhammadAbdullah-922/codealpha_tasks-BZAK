@@ -1,8 +1,9 @@
 .bzak-hero {
   position: relative;
   width: 100%;
-  height: 520px;
+  height: 560px;
   overflow: hidden;
+  background: #111;
 }
 
 .bzak-hero-track {
@@ -14,20 +15,37 @@
 .bzak-hero-slide {
   position: absolute;
   inset: 0;
- 
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.6s ease;
-  filter: saturate(1.15) contrast(1.05);
+  z-index: 1;
+  transition: opacity 0.9s ease, visibility 0.9s ease;
 }
 .bzak-hero-slide.active {
   opacity: 1;
   visibility: visible;
-  z-index: 1;
+  z-index: 2;
+}
+
+/* Full-bleed image — sharp, full opacity, no fading.
+   object-position is set inline per-slide from JSX (slide.position),
+   so each photo can be framed correctly (face/body not cropped). */
+.bzak-hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 1;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  backface-visibility: hidden;
+  filter: brightness(1.1) contrast(1.06) saturate(1.08);
+  transform: scale(1.03) translateZ(0);
+  transition: transform 6s ease-out;
+  will-change: transform;
+}
+.bzak-hero-slide.active .bzak-hero-img {
+  transform: scale(1) translateZ(0);
 }
 
 .bzak-hero-overlay {
@@ -35,10 +53,11 @@
   inset: 0;
   background: linear-gradient(
     100deg,
-    rgba(15, 10, 8, 0.72) 0%,
-    rgba(15, 10, 8, 0.35) 45%,
-    rgba(15, 10, 8, 0.05) 100%
+    rgba(15, 10, 8, 0.75) 0%,
+    rgba(15, 10, 8, 0.4) 45%,
+    rgba(15, 10, 8, 0.08) 100%
   );
+  z-index: 1;
 }
 
 .bzak-hero-content {
@@ -47,24 +66,50 @@
   display: flex;
   align-items: center;
   z-index: 2;
+  padding-left: 60px;
+  padding-right: 60px;
 }
 
 .bzak-hero-text {
   max-width: 560px;
   color: #fff;
 }
+
+/* Staggered entrance animation for text/button */
+.bzak-hero-tag,
+.bzak-hero-title,
+.bzak-hero-desc,
+.bzak-hero-btn {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: bzak-hero-in 0.7s ease forwards;
+}
+.bzak-hero-tag { animation-delay: 0.15s; }
+.bzak-hero-title { animation-delay: 0.3s; }
+.bzak-hero-desc { animation-delay: 0.45s; }
+.bzak-hero-btn { animation-delay: 0.6s; }
+
+@keyframes bzak-hero-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .bzak-hero-tag {
   font-family: "Georgia", serif;
   font-style: italic;
   font-size: 1.4rem;
   color: #f2c078;
   margin-bottom: 0.25rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 .bzak-hero-title {
   font-size: 3rem;
   font-weight: 800;
   line-height: 1.1;
   margin-bottom: 1rem;
+  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.55);
 }
 .bzak-hero-title-highlight {
   display: block;
@@ -72,14 +117,20 @@
   color: #2a1e10;
   padding: 4px 14px;
   width: fit-content;
+  max-width: 100%;
   margin-top: 6px;
   transform: rotate(-1deg);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  text-shadow: none;
+  white-space: nowrap;
 }
 .bzak-hero-desc {
   font-size: 1rem;
   color: #eee;
   margin-bottom: 1.5rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
+
 .bzak-hero-btn {
   background: #ec4b3c;
   color: #fff;
@@ -90,13 +141,19 @@
   display: inline-flex;
   align-items: center;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.25s ease, transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 .bzak-hero-btn:hover {
   background: #d33c2e;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(236, 75, 60, 0.4);
+}
+.bzak-hero-btn:active {
+  transform: translateY(0);
 }
 
-/* Arrows */
+/* Arrows — fixed side positioning, always centered on slider height */
 .bzak-hero-arrow {
   position: absolute;
   top: 50%;
@@ -105,25 +162,27 @@
   height: 44px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.9);
   color: #222;
   font-size: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 3;
-  transition: background 0.2s ease;
+  z-index: 4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: background 0.25s ease, transform 0.25s ease;
 }
 .bzak-hero-arrow:hover {
   background: #ec4b3c;
   color: #fff;
+  transform: translateY(-50%) scale(1.08);
 }
 .bzak-hero-arrow.left {
-  left: 24px;
+  left: 16px;
 }
 .bzak-hero-arrow.right {
-  right: 24px;
+  right: 16px;
 }
 
 /* Dots */
@@ -143,6 +202,7 @@
   border: none;
   background: rgba(255, 255, 255, 0.5);
   cursor: pointer;
+  transition: width 0.3s ease, background 0.3s ease;
 }
 .bzak-hero-dot.active {
   background: #ec4b3c;
@@ -153,18 +213,33 @@
 /* ---------- Responsive ---------- */
 @media (max-width: 991.98px) {
   .bzak-hero {
-    height: 420px;
+    height: 440px;
   }
   .bzak-hero-title {
     font-size: 2.4rem;
   }
+  .bzak-hero-content {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+  .bzak-hero-arrow {
+    width: 38px;
+    height: 38px;
+    font-size: 0.9rem;
+  }
+  .bzak-hero-arrow.left {
+    left: 10px;
+  }
+  .bzak-hero-arrow.right {
+    right: 10px;
+  }
 }
 @media (max-width: 575.98px) {
   .bzak-hero {
-    height: 360px;
+    height: 380px;
   }
   .bzak-hero-title {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
   .bzak-hero-tag {
     font-size: 1.1rem;
@@ -172,9 +247,20 @@
   .bzak-hero-desc {
     font-size: 0.85rem;
   }
+  .bzak-hero-content {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
   .bzak-hero-arrow {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+  .bzak-hero-arrow.left {
+    left: 8px;
+  }
+  .bzak-hero-arrow.right {
+    right: 8px;
   }
   .bzak-hero-btn {
     padding: 10px 20px;

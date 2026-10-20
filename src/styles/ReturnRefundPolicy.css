@@ -1,0 +1,106 @@
+/* ================= Return & Refund Policy Page ================= */
+
+.bzak-privacy {
+  padding: 70px 0 80px;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+}
+
+.bzak-privacy-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.bzak-privacy-content h2 {
+  color: #222;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.bzak-privacy-updated {
+  color: #999;
+  font-size: 0.85rem;
+  margin-bottom: 30px;
+}
+
+.bzak-privacy-content h3 {
+  color: #222;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-top: 38px;
+  margin-bottom: 15px;
+}
+
+.bzak-privacy-content p {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  margin-bottom: 18px;
+}
+
+.bzak-privacy-content strong {
+  color: #222;
+}
+
+.bzak-privacy-content a {
+  color: #ec4b3c;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.bzak-privacy-content a:hover {
+  color: #000;
+}
+
+/* ---------- Contact blocks ---------- */
+
+.bzak-privacy-contact {
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin: 20px 0 30px;
+}
+
+.bzak-privacy-contact p {
+  margin-bottom: 10px;
+}
+
+.bzak-privacy-contact p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- Copyright ---------- */
+
+.bzak-privacy-copyright {
+  margin-top: 45px;
+  padding-top: 25px;
+  border-top: 1px solid #eee;
+  color: #999 !important;
+  font-size: 0.85rem !important;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 767.98px) {
+  .bzak-privacy {
+    padding: 40px 0 50px;
+  }
+
+  .bzak-privacy-content h2 {
+    font-size: 1.6rem;
+  }
+
+  .bzak-privacy-content h3 {
+    font-size: 1.05rem;
+    margin-top: 30px;
+  }
+
+  .bzak-privacy-content p {
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .bzak-privacy-contact {
+    padding: 20px;
+  }
+}

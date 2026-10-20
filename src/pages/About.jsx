@@ -4,7 +4,7 @@ import { FaBoxOpen, FaHeadset, FaTruck, FaLock } from "react-icons/fa";
 import "../styles/About.css";
 
 // Replace this with your actual about-us image (add file in src/assets)
-import aboutImg from "../assets/pic3.jpeg";
+import aboutImg from "../assets/blue-trouser.png";
 
 const stats = [
   { value: "0.1", suffix: "k", label: "Stores" },
@@ -66,9 +66,7 @@ const About = () => {
                 durable, and always on trend, for every season and occasion.
               </p>
               <p>
-                We work directly with trusted manufacturers to keep our
-                quality high and our prices fair, so you always get more
-                value than what you pay for, order after order.
+              We manufacture our products ourselves, maintaining strict quality standards at every stage. This allows us to deliver high-quality products at fair prices, giving you the best value for your money, order after order.
               </p>
 
               <div className="bzak-about-stats">
